@@ -1,0 +1,328 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: #1a1a2e;
+  color: #eaeaea;
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.title {
+  text-align: center;
+  margin: 8px 0 24px;
+}
+
+/* Compact title for in-game pages */
+.title.small {
+  font-size: 14px;
+  margin: 4px 0 10px;
+  color: #9aa0d0;
+}
+
+/* --- Home / mode select --- */
+.mode-select {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.mode-button {
+  width: 260px;
+  padding: 16px;
+  font-size: 18px;
+  background: #16213e;
+  color: #eaeaea;
+  border: 2px solid #4a4e8f;
+  border-radius: 8px;
+}
+
+.mode-button:hover {
+  background: #1f2b52;
+}
+
+/* --- Game board layout --- */
+.game-board {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.board-row {
+  display: flex;
+  gap: 8px;
+  min-height: 140px;
+  padding: 8px;
+  border: 1px dashed #3a3f6e;
+  border-radius: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.board-row.empty::after {
+  content: "(no creatures)";
+  color: #666a99;
+  font-size: 13px;
+}
+
+.divider {
+  border-top: 1px solid #3a3f6e;
+  margin: 4px 0;
+}
+
+/* --- HUD --- */
+.hud {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 8px 12px;
+  background: #16213e;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.hud .name {
+  font-weight: bold;
+}
+
+.hud .hp {
+  color: #ff5c5c;
+  font-weight: bold;
+}
+
+.hud .mana {
+  color: #6fb7ff;
+  font-weight: bold;
+}
+
+.hud .active-marker {
+  color: #ffd700;
+}
+
+.hud .face-target {
+  background: #7a1f2b;
+  color: #fff;
+  border: 2px solid #ff5c72;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+/* --- Cards and creatures --- */
+/* Fixed 3:4 size; every state keeps the same 2px border and only changes
+   its color, so cards never resize on hover/selection/exhaustion. */
+.card,
+.creature {
+  background: #0f3460;
+  border: 2px solid #4a4e8f;
+  border-radius: 8px;
+  padding: 6px;
+  width: 90px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.25;
+  color: #eaeaea;
+  overflow: hidden;
+}
+
+.card .name,
+.creature .name {
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.card .cost {
+  color: #6fb7ff;
+}
+
+/* ATK on the left edge, HP on the right edge */
+.card .stats,
+.creature .stats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Art stretches to fill the space the name/stats rows leave free, capped
+   so it doesn't dominate the card */
+.card-art {
+  flex: 1;
+  min-height: 0;
+  max-height: 60px;
+  width: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.card.playable:hover {
+  border-color: #ffd700;
+}
+
+.card.unplayable {
+  opacity: 0.45;
+}
+
+.creature.can-attack {
+  border-color: #7dff8a;
+}
+
+/* Background comes from the card's colorType, so states only recolor the border */
+.creature.selected {
+  border-color: #ffd700;
+}
+
+.creature.targetable {
+  border-color: #ff5c72;
+}
+
+.creature.exhausted {
+  opacity: 0.6;
+}
+
+.creature .tag {
+  display: block;
+  font-size: 11px;
+  min-height: 14px;
+  color: #9aa0d0;
+}
+
+/* --- Controls --- */
+.hand-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 128px;
+}
+
+.controls-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.end-turn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #2e7d32;
+  color: #fff;
+  border: 2px solid #66bb6a;
+  border-radius: 8px;
+}
+
+.target-prompt {
+  color: #ffd700;
+}
+
+.status-message {
+  color: #ff8a9a;
+  min-height: 20px;
+}
+
+.info-message {
+  color: #9aa0d0;
+}
+
+/* --- Lobby --- */
+.lobby {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 420px;
+  margin: 48px auto;
+}
+
+.lobby section {
+  background: #16213e;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lobby input {
+  padding: 10px;
+  font-family: inherit;
+  font-size: 16px;
+  background: #0f3460;
+  border: 2px solid #4a4e8f;
+  border-radius: 6px;
+  color: #eaeaea;
+  text-transform: uppercase;
+}
+
+.lobby button {
+  padding: 10px;
+  font-size: 16px;
+  background: #0f3460;
+  color: #eaeaea;
+  border: 2px solid #4a4e8f;
+  border-radius: 6px;
+}
+
+.lobby button:hover:not(:disabled) {
+  border-color: #ffd700;
+}
+
+/* --- Game over modal --- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.game-over {
+  text-align: center;
+  padding: 32px 48px;
+  background: #16213e;
+  border: 2px solid #ffd700;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+.game-over h2 {
+  margin: 0 0 12px;
+}
+
+.room-code {
+  font-size: 28px;
+  letter-spacing: 4px;
+  color: #ffd700;
+  text-align: center;
+}
+
+a {
+  color: #6fb7ff;
+}

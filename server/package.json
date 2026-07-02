@@ -1,0 +1,14 @@
+{
+  "name": "@mario-cards/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "@mario-cards/shared": "file:../shared",
+    "ws": "^8.18.0"
+  }
+}

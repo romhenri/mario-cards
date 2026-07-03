@@ -13,8 +13,7 @@ export const STARTING_HP = 30;
 export const MANA_CAP = 10;
 export const BOARD_LIMIT = 7;
 export const INITIAL_HAND_SIZE = 3;
-export const COIN_BONUS_CARDS = 1; // extra card for the player going second
-export const DECK_COPIES_PER_CARD = 15; // 15x goombo + 15x goomba = 30 cards
+export const DECK_SIZE = 16; // duplicates allowed: more copies = drawn more often
 
 // Deterministic PRNG (mulberry32) so games are reproducible from a seed.
 function mulberry32(seed: number): () => number {
@@ -41,10 +40,26 @@ function newInstanceId(): string {
   return globalThis.crypto.randomUUID();
 }
 
-function buildDeck(rng: () => number): CardId[] {
+const ALL_CARD_IDS = Object.keys(CARD_CATALOG) as CardId[];
+
+// Fallback deck for players without a custom one: DECK_SIZE random picks
+// from the catalog (duplicates possible).
+export function buildRandomDeck(rng: () => number = Math.random): CardId[] {
   const deck: CardId[] = [];
-  for (let i = 0; i < DECK_COPIES_PER_CARD; i++) deck.push("goombo", "goomba");
-  return shuffle(deck, rng);
+  for (let i = 0; i < DECK_SIZE; i++) {
+    deck.push(ALL_CARD_IDS[Math.floor(rng() * ALL_CARD_IDS.length)]);
+  }
+  return deck;
+}
+
+// Validates an untrusted deck list (client payload / localStorage).
+// Returns the typed deck, or null if it isn't exactly DECK_SIZE known cards.
+export function sanitizeDeck(value: unknown): CardId[] | null {
+  if (!Array.isArray(value) || value.length !== DECK_SIZE) return null;
+  const ids = value.filter(
+    (id): id is CardId => typeof id === "string" && id in CARD_CATALOG
+  );
+  return ids.length === DECK_SIZE ? ids : null;
 }
 
 // Draw one card into hand. Empty deck: no draw, no damage (no fatigue in v1).
@@ -56,46 +71,48 @@ function draw(player: PlayerState): void {
 }
 
 // Start-of-turn sequence for the (already switched) active player.
-function beginTurn(player: PlayerState): void {
+// The very first turn of the game skips the draw so both players open
+// with exactly INITIAL_HAND_SIZE cards.
+function beginTurn(player: PlayerState, withDraw = true): void {
   player.manaMax = Math.min(MANA_CAP, player.manaMax + 1);
   player.manaCurrent = player.manaMax;
   for (const creature of player.board) {
     creature.hasSummoningSickness = false;
     creature.hasAttackedThisTurn = false;
   }
-  draw(player);
+  if (withDraw) draw(player);
 }
 
 export function createGame(
   playerAId: string,
   playerBId: string,
-  rngSeed?: number
+  rngSeed?: number,
+  decks?: [CardId[] | null | undefined, CardId[] | null | undefined]
 ): GameState {
   const rng = mulberry32(rngSeed ?? Math.floor(Math.random() * 2 ** 31));
 
-  const makePlayer = (playerId: string): PlayerState => ({
+  const makePlayer = (
+    playerId: string,
+    deckList?: CardId[] | null
+  ): PlayerState => ({
     playerId,
     hp: STARTING_HP,
     manaCurrent: 0,
     manaMax: 0,
-    deck: buildDeck(rng),
+    deck: shuffle(deckList ?? buildRandomDeck(rng), rng),
     hand: [],
     board: [],
   });
 
   const players: [PlayerState, PlayerState] = [
-    makePlayer(playerAId),
-    makePlayer(playerBId),
+    makePlayer(playerAId, decks?.[0]),
+    makePlayer(playerBId, decks?.[1]),
   ];
   const firstPlayerIndex: 0 | 1 = rng() < 0.5 ? 0 : 1;
   const secondPlayerIndex = firstPlayerIndex === 0 ? 1 : 0;
 
   for (let i = 0; i < INITIAL_HAND_SIZE; i++) {
     draw(players[firstPlayerIndex]);
-    draw(players[secondPlayerIndex]);
-  }
-  // "The coin": the player going second draws one extra card.
-  for (let i = 0; i < COIN_BONUS_CARDS; i++) {
     draw(players[secondPlayerIndex]);
   }
 
@@ -107,7 +124,7 @@ export function createGame(
     turnNumber: 1,
     winnerPlayerId: null,
   };
-  beginTurn(state.players[firstPlayerIndex]);
+  beginTurn(state.players[firstPlayerIndex], false);
   return state;
 }
 

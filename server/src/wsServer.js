@@ -1,4 +1,5 @@
 import { WebSocketServer } from "ws";
+import { sanitizeDeck } from "@mario-cards/shared";
 import { log, logError } from "./logger.js";
 import {
   CLIENT_MSG,
@@ -52,7 +53,8 @@ export function createWsServer(httpServer) {
           return;
         }
         const room = roomManager.createRoom();
-        const playerId = room.addPlayer(socket);
+        // Invalid/missing decks fall back to a server-generated random one.
+        const playerId = room.addPlayer(socket, sanitizeDeck(payload.deck));
         session.room = room;
         socket.send(
           encode(SERVER_MSG.ROOM_CREATED, { roomId: room.roomId, playerId })
@@ -76,7 +78,7 @@ export function createWsServer(httpServer) {
           return;
         }
         session.room = room;
-        const playerId = room.addPlayer(socket);
+        const playerId = room.addPlayer(socket, sanitizeDeck(payload.deck));
         // room_joined must reach the client before the game_start emitted
         // by startIfReady, so the client knows its playerId first.
         socket.send(encode(SERVER_MSG.ROOM_JOINED, { roomId: room.roomId, playerId }));

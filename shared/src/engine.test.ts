@@ -5,10 +5,12 @@ import {
   BOARD_LIMIT,
   checkWinner,
   createGame,
+  DECK_SIZE,
   endTurn,
   INITIAL_HAND_SIZE,
   MANA_CAP,
   playCard,
+  sanitizeDeck,
   STARTING_HP,
   toClientState,
 } from "./engine.js";
@@ -30,7 +32,7 @@ function makePlayer(overrides: Partial<PlayerState> = {}): PlayerState {
 function makeCreature(overrides: Partial<BoardCreature> = {}): BoardCreature {
   return {
     instanceId: "c-" + Math.random().toString(36).slice(2),
-    cardId: "goombo",
+    cardId: "Galoomba",
     currentAttack: 2,
     currentHealth: 2,
     hasSummoningSickness: false,
@@ -55,18 +57,18 @@ function makeState(overrides: Partial<GameState> = {}): GameState {
 }
 
 describe("createGame", () => {
-  it("sets up 30 hp, 30-card decks minus draws, and the coin bonus", () => {
+  it("sets up 30 hp and both players opening with exactly 3 cards", () => {
     const state = createGame("alice", "bob", 42);
     const first = state.players[state.activePlayerIndex];
     const second = state.players[state.activePlayerIndex === 0 ? 1 : 0];
 
     assert.equal(first.hp, STARTING_HP);
     assert.equal(second.hp, STARTING_HP);
-    // First player: 3 initial + 1 drawn at turn start. Second player: 3 + 1 coin.
-    assert.equal(first.hand.length, INITIAL_HAND_SIZE + 1);
-    assert.equal(second.hand.length, INITIAL_HAND_SIZE + 1);
-    assert.equal(first.deck.length, 30 - INITIAL_HAND_SIZE - 1);
-    assert.equal(second.deck.length, 30 - INITIAL_HAND_SIZE - 1);
+    // No draw on the very first turn and no coin bonus: both open with 3.
+    assert.equal(first.hand.length, INITIAL_HAND_SIZE);
+    assert.equal(second.hand.length, INITIAL_HAND_SIZE);
+    assert.equal(first.deck.length, DECK_SIZE - INITIAL_HAND_SIZE);
+    assert.equal(second.deck.length, DECK_SIZE - INITIAL_HAND_SIZE);
     // First player starts with 1/1 mana; second still at 0 until their turn.
     assert.equal(first.manaMax, 1);
     assert.equal(first.manaCurrent, 1);
@@ -85,6 +87,29 @@ describe("createGame", () => {
       b.players[0].hand.map((c) => c.cardId)
     );
   });
+
+  it("uses a provided custom deck (shuffled, same cards)", () => {
+    const custom = Array<"goomba" | "Galoomba">(DECK_SIZE).fill("goomba");
+    custom[0] = "Galoomba";
+    const state = createGame("alice", "bob", 42, [custom, null]);
+    const alice = state.players[0];
+    const dealt = [...alice.deck, ...alice.hand.map((c) => c.cardId)];
+    assert.deepEqual([...dealt].sort(), [...custom].sort());
+  });
+});
+
+describe("sanitizeDeck", () => {
+  it("accepts exactly DECK_SIZE known card ids", () => {
+    const deck = Array(DECK_SIZE).fill("goomba");
+    assert.deepEqual(sanitizeDeck(deck), deck);
+  });
+
+  it("rejects wrong sizes, unknown ids, and non-arrays", () => {
+    assert.equal(sanitizeDeck(Array(DECK_SIZE - 1).fill("goomba")), null);
+    assert.equal(sanitizeDeck(Array(DECK_SIZE).fill("mario")), null);
+    assert.equal(sanitizeDeck("goomba"), null);
+    assert.equal(sanitizeDeck(null), null);
+  });
 });
 
 describe("playCard", () => {
@@ -92,7 +117,7 @@ describe("playCard", () => {
     const state = makeState();
     state.players[0].manaCurrent = 2;
     state.players[0].manaMax = 2;
-    state.players[0].hand = [{ instanceId: "h1", cardId: "goombo" }];
+    state.players[0].hand = [{ instanceId: "h1", cardId: "Galoomba" }];
 
     const { state: next, error } = playCard(state, "p0", "h1");
     assert.equal(error, undefined);
@@ -110,7 +135,7 @@ describe("playCard", () => {
   it("rejects playing a card without enough mana", () => {
     const state = makeState();
     state.players[0].manaCurrent = 1;
-    state.players[0].hand = [{ instanceId: "h1", cardId: "goombo" }]; // costs 2
+    state.players[0].hand = [{ instanceId: "h1", cardId: "Galoomba" }]; // costs 2
 
     const { state: next, error } = playCard(state, "p0", "h1");
     assert.equal(error, "Not enough mana");
@@ -168,7 +193,7 @@ describe("attack", () => {
 
   it("resolves creature combat with counter-attack damage", () => {
     const state = makeState();
-    // Goombo 2/2 attacks Goomba 1/1: goomba dies, goombo survives at 2/1.
+    // Galoomba 2/2 attacks Goomba 1/1: goomba dies, Galoomba survives at 2/1.
     state.players[0].board = [makeCreature({ instanceId: "a1" })];
     state.players[1].board = [
       makeCreature({ instanceId: "d1", cardId: "goomba", currentAttack: 1, currentHealth: 1 }),
@@ -228,7 +253,7 @@ describe("attack", () => {
 describe("endTurn / mana progression", () => {
   it("passes the turn, grows and refills the new player's mana, and draws", () => {
     const state = makeState();
-    state.players[1].deck = ["goomba", "goombo"];
+    state.players[1].deck = ["Galoomba", "Galoomba"];
     state.players[1].manaMax = 3;
     state.players[1].manaCurrent = 0;
 

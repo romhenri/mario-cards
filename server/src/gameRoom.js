@@ -31,9 +31,9 @@ export class GameRoom {
     return this.state !== null;
   }
 
-  addPlayer(socket) {
+  addPlayer(socket, deck = null) {
     const playerId = globalThis.crypto.randomUUID();
-    this.players.push({ socket, playerId });
+    this.players.push({ socket, playerId, deck });
     return playerId;
   }
 
@@ -42,7 +42,12 @@ export class GameRoom {
   }
 
   start() {
-    this.state = createGame(this.players[0].playerId, this.players[1].playerId);
+    this.state = createGame(
+      this.players[0].playerId,
+      this.players[1].playerId,
+      undefined,
+      [this.players[0].deck, this.players[1].deck]
+    );
     log(`room ${this.roomId}: game started`);
     this.broadcast(SERVER_MSG.GAME_START);
   }

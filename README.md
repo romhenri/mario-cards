@@ -42,7 +42,7 @@ npm test   # shared engine unit tests
 
 ## Rules (v1)
 
-- 30 HP per player; decks are 15× Goombo (2 mana 2/2) + 15× Goomba (1 mana 1/1), shuffled. The card database (stats, colors, art) lives in `shared/src/cards.json`.
+- 30 HP per player; decks are 15× Galoomba (2 mana 2/2) + 15× Goomba (1 mana 1/1), shuffled. The card database (stats, colors, art) lives in `shared/src/cards.json`.
 - 3-card starting hand; the player going second draws 1 extra card.
 - Mana: +1 max per turn (cap 10), refilled at turn start; draw 1 at turn start (empty deck = no draw, no damage).
 - Creatures can't attack the turn they're played (summoning sickness) and attack once per turn, targeting a creature (simultaneous combat with counter-attack) or the opponent's face.

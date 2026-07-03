@@ -68,7 +68,7 @@ function waitFor(client, predicate, label, timeoutMs = 5000) {
 /** Pick one greedy action from a filtered view: play card > attack face > end turn. */
 function nextAction(view) {
   const affordable = view.you.hand.find((c) => {
-    const cost = c.cardId === "goombo" ? 2 : 1;
+    const cost = c.cardId === "Galoomba" ? 2 : 1;
     return cost <= view.you.manaCurrent;
   });
   if (affordable && view.you.board.length < 7) {

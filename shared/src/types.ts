@@ -1,4 +1,30 @@
-export type CardId = "goombo" | "goomba";
+export type CardId =
+  | "Galoomba"
+  | "winged-Galoomba"
+  | "grand-Galoomba"
+  | "goomba"
+  | "paragoomba"
+  | "grand-goomba"
+  | "gloomba"
+  | "koopa-troopa"
+  | "koopa-paratroopa"
+  | "shy-guy"
+  | "fly-guy"
+  | "piranha-plant"
+  | "venus-fire-trap"
+  | "hammer-bro"
+  | "sledge-bro"
+  | "boomerang-bro"
+  | "fire-bro"
+  | "ice-bro"
+  | "bob-omb"
+  | "para-bomb"
+  | "magikoopa"
+  | "monty-mole"
+  | "morty-mole"
+  | "rocky-wrench";
+
+export type CardRarity = "common" | "rare" | "legend";
 
 export interface CardDefinition {
   id: CardId;
@@ -6,6 +32,13 @@ export interface CardDefinition {
   cost: number; // mana cost
   attack: number; // base attack
   health: number; // base health
+  rarity: CardRarity;
+  stealth: boolean;
+  taunt: boolean;
+  quick: boolean;
+  shield: boolean;
+  fly: boolean;
+  reach: boolean;
   colorType: string; // card background color (CSS color)
   image: string; // public asset path, e.g. "/cards-assets/Goomba.png"
 }

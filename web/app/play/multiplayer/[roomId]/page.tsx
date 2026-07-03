@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useReducer, useRef } from "react";
+import type { ClientGameState } from "@mario-cards/shared";
 import { GameBoard } from "../../../../components/board/GameBoard";
+import { SiteTitle } from "../../../../components/layout/SiteTitle";
 import {
   gameUiReducer,
   initialGameUiState,
 } from "../../../../lib/gameStateStore";
+import { playTransitionSounds } from "../../../../lib/sounds";
 import { getWsClient, type ServerMessage } from "../../../../lib/wsClient";
 
 export default function MultiplayerRoomPage() {
@@ -16,6 +19,7 @@ export default function MultiplayerRoomPage() {
   const router = useRouter();
   const [ui, dispatch] = useReducer(gameUiReducer, initialGameUiState);
   const joinAttemptedRef = useRef(false);
+  const lastViewRef = useRef<ClientGameState | null>(null);
 
   useEffect(() => {
     const client = getWsClient();
@@ -24,6 +28,8 @@ export default function MultiplayerRoomPage() {
       switch (msg.type) {
         case "game_start":
         case "state_update":
+          playTransitionSounds(lastViewRef.current, msg.payload.state);
+          lastViewRef.current = msg.payload.state;
           dispatch({ type: "set_view", view: msg.payload.state });
           break;
         case "action_rejected":
@@ -44,8 +50,12 @@ export default function MultiplayerRoomPage() {
 
     if (client.roomId === roomId) {
       // Came from the lobby: the socket is live; render any buffered state
-      // (game_start can arrive before this page mounts).
-      if (client.lastView) dispatch({ type: "set_view", view: client.lastView });
+      // (game_start can arrive before this page mounts). No sound: it isn't
+      // a transition, just a late render.
+      if (client.lastView) {
+        lastViewRef.current = client.lastView;
+        dispatch({ type: "set_view", view: client.lastView });
+      }
     } else if (!joinAttemptedRef.current) {
       // Opened the room URL directly: connect and join now.
       joinAttemptedRef.current = true;
@@ -70,7 +80,7 @@ export default function MultiplayerRoomPage() {
 
   return (
     <main className="page">
-      <h1 className="title small">🍄 Mario Cards — Multiplayer</h1>
+      <SiteTitle small subtitle="Multiplayer" />
       {ui.view ? (
         <GameBoard
           view={ui.view}

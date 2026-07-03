@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { GameBoard } from "../../../components/board/GameBoard";
+import { SiteTitle } from "../../../components/layout/SiteTitle";
 import { useCpuGame } from "../../../lib/cpuGameClient";
 
 export default function CpuGamePage() {
@@ -9,7 +10,7 @@ export default function CpuGamePage() {
 
   return (
     <main className="page">
-      <h1 className="title small">🍄 Mario Cards — vs CPU</h1>
+      <SiteTitle small />
       {ui.view ? (
         <GameBoard
           view={ui.view}

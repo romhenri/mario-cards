@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { SiteTitle } from "../../../components/layout/SiteTitle";
+import { loadDeck } from "../../../lib/deckStore";
 import { getWsClient } from "../../../lib/wsClient";
 
 export default function MultiplayerLobbyPage() {
@@ -17,7 +19,7 @@ export default function MultiplayerLobbyPage() {
     try {
       const client = getWsClient();
       await client.connect();
-      const { roomId } = await client.createRoom();
+      const { roomId } = await client.createRoom(loadDeck());
       router.push(`/play/multiplayer/${roomId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create room");
@@ -33,7 +35,7 @@ export default function MultiplayerLobbyPage() {
     try {
       const client = getWsClient();
       await client.connect();
-      const { roomId } = await client.joinRoom(code);
+      const { roomId } = await client.joinRoom(code, loadDeck());
       router.push(`/play/multiplayer/${roomId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to join room");
@@ -43,7 +45,7 @@ export default function MultiplayerLobbyPage() {
 
   return (
     <main className="page">
-      <h1 className="title">🍄 Mario Cards — Multiplayer</h1>
+      <SiteTitle subtitle="Multiplayer" />
       <div className="lobby">
         <section>
           <h2>Create a room</h2>

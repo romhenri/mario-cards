@@ -12,6 +12,8 @@ import {
   type PlayerAction,
 } from "@mario-cards/shared";
 import { decideCpuTurn } from "./cpuAI";
+import { loadDeck } from "./deckStore";
+import { playTransitionSounds } from "./sounds";
 import {
   gameUiReducer,
   initialGameUiState,
@@ -56,8 +58,11 @@ export function useCpuGame(): CpuGame {
   const startedRef = useRef(false);
 
   const publish = useCallback((state: GameState) => {
+    const prev = stateRef.current;
+    const view = toClientState(state, HUMAN_INDEX);
+    playTransitionSounds(prev ? toClientState(prev, HUMAN_INDEX) : null, view);
     stateRef.current = state;
-    dispatch({ type: "set_view", view: toClientState(state, HUMAN_INDEX) });
+    dispatch({ type: "set_view", view });
   }, []);
 
   const runCpuTurn = useCallback(async () => {
@@ -96,7 +101,11 @@ export function useCpuGame(): CpuGame {
   }, [publish]);
 
   const resetGame = useCallback(() => {
-    const state = createGame(HUMAN_PLAYER_ID, CPU_PLAYER_ID);
+    // Human uses the deck built on /deck (if any); the CPU gets a random one.
+    const state = createGame(HUMAN_PLAYER_ID, CPU_PLAYER_ID, undefined, [
+      loadDeck(),
+      null,
+    ]);
     publish(state);
     if (state.activePlayerIndex === CPU_INDEX) void runCpuTurn();
   }, [publish, runCpuTurn]);

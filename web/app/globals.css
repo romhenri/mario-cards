@@ -4,7 +4,8 @@
 
 body {
   margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
   background: #1a1a2e;
   color: #eaeaea;
   min-height: 100vh;
@@ -27,8 +28,24 @@ button:disabled {
 }
 
 .title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   text-align: center;
   margin: 8px 0 24px;
+}
+
+.site-logo {
+  height: 90px;
+  width: auto;
+}
+
+.title .subtitle {
+  font-size: 16px;
+  color: #9aa0d0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 /* Compact title for in-game pages */
@@ -36,6 +53,14 @@ button:disabled {
   font-size: 14px;
   margin: 4px 0 10px;
   color: #9aa0d0;
+}
+
+.title.small .site-logo {
+  height: 40px;
+}
+
+.title.small .subtitle {
+  font-size: 12px;
 }
 
 /* --- Home / mode select --- */
@@ -71,7 +96,7 @@ button:disabled {
 .board-row {
   display: flex;
   gap: 8px;
-  min-height: 140px;
+  min-height: 180px;
   padding: 8px;
   border: 1px dashed #3a3f6e;
   border-radius: 8px;
@@ -101,22 +126,66 @@ button:disabled {
   flex-wrap: wrap;
 }
 
+/* Fixed-width slot so "You"/"CPU"/longer names all take the same space
+   and the rest of the HUD never shifts */
 .hud .name {
   font-weight: bold;
+  width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.hud .hp {
-  color: #ff5c5c;
+/* Yellow dot on the left of the name marks the active player;
+   the inactive player's dot goes dark blue */
+.turn-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0f3460;
+}
+
+.turn-dot.on {
+  background: #ffd700;
+  box-shadow: 0 0 6px #ffd700;
+}
+
+/* Fixed width so 1- and 2-digit HP keep the bar in the same place */
+.hp-num {
+  color: #e53935;
   font-weight: bold;
+  min-width: 22px;
+  text-align: right;
+}
+
+/* HP as a 30-segment bar: red = remaining, black = damage taken */
+.hp-bar {
+  display: flex;
+  gap: 1px;
+  align-items: center;
+}
+
+.hp-seg {
+  width: 5px;
+  height: 14px;
+  border-radius: 1px;
+}
+
+.hp-seg.filled {
+  background: #e53935;
+}
+
+.hp-seg.lost {
+  background: #000;
 }
 
 .hud .mana {
   color: #6fb7ff;
   font-weight: bold;
-}
-
-.hud .active-marker {
-  color: #ffd700;
 }
 
 .hud .face-target {
@@ -132,12 +201,15 @@ button:disabled {
    its color, so cards never resize on hover/selection/exhaustion. */
 .card,
 .creature {
+  position: relative; /* anchor for the cost badge */
   background: #0f3460;
-  border: 2px solid #4a4e8f;
+  /* border defaults to a darker shade of the card's colorType (set inline
+     via --card-border); state classes below still override it */
+  border: 2px solid var(--card-border, #4a4e8f);
   border-radius: 8px;
   padding: 6px;
-  width: 90px;
-  height: 120px;
+  width: 120px;
+  height: 160px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -149,14 +221,49 @@ button:disabled {
   overflow: hidden;
 }
 
+/* Name plate: translucent white strip so the name stays readable on any
+   colorType while letting the card color show through */
+/* Same visual language as the keyword badges: dark strip, white text */
 .card .name,
 .creature .name {
-  font-size: 10px;
+  font-size: 9px;
   line-height: 1.2;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-weight: bold;
+  text-align: left;
+  /* single line: long names get clipped with an ellipsis */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.card .cost {
-  color: #6fb7ff;
+/* Hand/deck cards show the cost badge: indent the name past it */
+.name.with-cost {
+  padding-left: 28px;
+}
+
+/* Mana cost: blue circle pinned to the card's top-left corner */
+.cost-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #1565c0;
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 /* ATK on the left edge, HP on the right edge */
@@ -169,15 +276,81 @@ button:disabled {
   font-size: 14px;
 }
 
-/* Art stretches to fill the space the name/stats rows leave free, capped
-   so it doesn't dominate the card */
-.card-art {
+/* Attack in a yellow circle, health in a red circle */
+.stat {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.stat.attack {
+  background: #ffd700;
+  color: #1a1a2e;
+}
+
+.stat.health {
+  background: #e53935;
+  color: #fff;
+}
+
+/* Art stretches to fill the space the name/stats rows leave free; a white
+   half-opacity circle sits behind the PNG to lift it off the colorType */
+.card-art-box {
+  position: relative;
   flex: 1;
   min-height: 0;
-  max-height: 60px;
   width: 100%;
+  margin-top: 5px; /* breathing room between the name plate and the art */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.card-art-box::before {
+  content: "";
+  position: absolute;
+  width: 74px;
+  height: 74px;
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.card-art {
+  position: relative;
+  max-height: 80px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   pointer-events: none;
+}
+
+/* Keyword strip below the stats (Quick / Fly / Reach / Stealth / Taunt /
+   Shield). Always present so cards without keywords keep the same layout. */
+.keywords {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  min-height: 15px;
+}
+
+.keyword {
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
 }
 
 .card.playable:hover {
@@ -186,6 +359,48 @@ button:disabled {
 
 .card.unplayable {
   opacity: 0.45;
+}
+
+/* Summon: the card drops onto the board with a little overshoot */
+@keyframes creature-spawn {
+  0% {
+    transform: translateY(-24px) scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(2px) scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.creature {
+  animation: creature-spawn 0.35s ease-out;
+}
+
+/* Death: the card tips over to horizontal, then fades out. Duration must
+   stay in sync with DEATH_MS in GameBoard.tsx (ghost removal). */
+@keyframes creature-death {
+  0% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  55% {
+    transform: rotate(90deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: rotate(90deg);
+    opacity: 0;
+  }
+}
+
+.creature.dying {
+  animation: creature-death 0.6s ease-in forwards;
+  pointer-events: none;
 }
 
 .creature.can-attack {
@@ -205,20 +420,13 @@ button:disabled {
   opacity: 0.6;
 }
 
-.creature .tag {
-  display: block;
-  font-size: 11px;
-  min-height: 14px;
-  color: #9aa0d0;
-}
-
 /* --- Controls --- */
 .hand-row {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-  min-height: 128px;
+  min-height: 168px;
 }
 
 .controls-row {
@@ -325,4 +533,94 @@ button:disabled {
 
 a {
   color: #6fb7ff;
+}
+
+/* --- Deck builder --- */
+.deck-hint {
+  text-align: center;
+  color: #9aa0d0;
+}
+
+.deck-toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.deck-count {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff8a9a;
+}
+
+.deck-count.complete {
+  color: #7dff8a;
+}
+
+.deck-save,
+.deck-clear {
+  padding: 8px 16px;
+  font-size: 14px;
+  background: #16213e;
+  color: #eaeaea;
+  border: 2px solid #4a4e8f;
+  border-radius: 8px;
+}
+
+.deck-save:hover:not(:disabled),
+.deck-clear:hover {
+  border-color: #ffd700;
+}
+
+.deck-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.deck-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+}
+
+.deck-slot.picked {
+  border-color: #ffd700;
+}
+
+.deck-slot-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.deck-copies {
+  min-width: 28px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.deck-minus,
+.deck-plus {
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  background: #0f3460;
+  color: #eaeaea;
+  border: 2px solid #4a4e8f;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.deck-minus:hover:not(:disabled),
+.deck-plus:hover:not(:disabled) {
+  border-color: #ffd700;
 }

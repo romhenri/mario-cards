@@ -15,6 +15,9 @@ export function ModeSelect() {
       >
         Multiplayer
       </button>
+      <button className="mode-button" onClick={() => router.push("/deck")}>
+        Deck Builder
+      </button>
     </div>
   );
 }

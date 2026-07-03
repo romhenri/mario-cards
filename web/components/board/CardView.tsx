@@ -1,6 +1,7 @@
 "use client";
 
 import { CARD_CATALOG, type HandCard } from "@mario-cards/shared";
+import { CardFace, cardStyle } from "./CardFace";
 
 interface CardViewProps {
   card: HandCard;
@@ -13,20 +14,12 @@ export function CardView({ card, playable, onClick }: CardViewProps) {
   return (
     <button
       className={`card ${playable ? "playable" : "unplayable"}`}
-      style={{ background: def.colorType }}
+      style={cardStyle(def)}
       onClick={onClick}
       disabled={!playable}
       title={playable ? `Play ${def.name}` : "Not enough mana (or not your turn)"}
     >
-      <div className="name">
-        <span className="cost">[{def.cost}]</span> {def.name}
-      </div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="card-art" src={def.image} alt={def.name} draggable={false} />
-      <div className="stats">
-        <span>{def.attack}</span>
-        <span>{def.health}</span>
-      </div>
+      <CardFace def={def} attack={def.attack} health={def.health} showCost />
     </button>
   );
 }

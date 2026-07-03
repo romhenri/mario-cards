@@ -1,6 +1,6 @@
 "use client";
 
-import type { ClientGameState, PlayerAction } from "@mario-cards/shared";
+import type { CardId, ClientGameState, PlayerAction } from "@mario-cards/shared";
 
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8787";
 
@@ -123,16 +123,16 @@ class WsClient {
     });
   }
 
-  createRoom() {
+  createRoom(deck?: CardId[] | null) {
     return this.request<{ roomId: string; playerId: string }>(
-      () => this.send("create_room"),
+      () => this.send("create_room", { deck }),
       "room_created"
     );
   }
 
-  joinRoom(roomId: string) {
+  joinRoom(roomId: string, deck?: CardId[] | null) {
     return this.request<{ roomId: string; playerId: string }>(
-      () => this.send("join_room", { roomId }),
+      () => this.send("join_room", { roomId, deck }),
       "room_joined"
     );
   }

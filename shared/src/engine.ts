@@ -10,7 +10,7 @@ import type {
 } from "./types.js";
 
 export const STARTING_HP = 30;
-export const MANA_CAP = 10;
+export const COINS_CAP = 10;
 export const BOARD_LIMIT = 7;
 export const INITIAL_HAND_SIZE = 3;
 export const DECK_SIZE = 16; // duplicates allowed: more copies = drawn more often
@@ -74,8 +74,8 @@ function draw(player: PlayerState): void {
 // The very first turn of the game skips the draw so both players open
 // with exactly INITIAL_HAND_SIZE cards.
 function beginTurn(player: PlayerState, withDraw = true): void {
-  player.manaMax = Math.min(MANA_CAP, player.manaMax + 1);
-  player.manaCurrent = player.manaMax;
+  player.coinsMax = Math.min(COINS_CAP, player.coinsMax + 1);
+  player.coinsCurrent = player.coinsMax;
   for (const creature of player.board) {
     creature.hasSummoningSickness = false;
     creature.hasAttackedThisTurn = false;
@@ -97,8 +97,8 @@ export function createGame(
   ): PlayerState => ({
     playerId,
     hp: STARTING_HP,
-    manaCurrent: 0,
-    manaMax: 0,
+    coinsCurrent: 0,
+    coinsMax: 0,
     deck: shuffle(deckList ?? buildRandomDeck(rng), rng),
     hand: [],
     board: [],
@@ -121,6 +121,7 @@ export function createGame(
     phase: "playing",
     players,
     activePlayerIndex: firstPlayerIndex,
+    firstPlayerIndex,
     turnNumber: 1,
     winnerPlayerId: null,
   };
@@ -160,21 +161,57 @@ export function playCard(
   if (handIndex === -1) return { state, error: "Card is not in your hand" };
 
   const card = CARD_CATALOG[player.hand[handIndex].cardId];
-  if (player.manaCurrent < card.cost) return { state, error: "Not enough mana" };
+  if (player.coinsCurrent < card.cost) return { state, error: "Not enough coins" };
   if (player.board.length >= BOARD_LIMIT) return { state, error: "Your board is full" };
 
-  player.manaCurrent -= card.cost;
+  player.coinsCurrent -= card.cost;
   const [handCard] = player.hand.splice(handIndex, 1);
   const creature: BoardCreature = {
     instanceId: handCard.instanceId,
     cardId: card.id,
     currentAttack: card.attack,
     currentHealth: card.health,
-    hasSummoningSickness: true,
+    hasSummoningSickness: !card.quick && !card.bomb, // Quick/Bomb: can attack the turn it enters
     hasAttackedThisTurn: false,
+    shieldActive: card.shield,
+    stealthed: card.stealth,
   };
   player.board.push(creature);
   return { state: next };
+}
+
+// Fly: only fly or reach attackers can hit a flying creature.
+function canHit(attacker: BoardCreature, defender: BoardCreature): boolean {
+  const attackerCard = CARD_CATALOG[attacker.cardId];
+  const defenderCard = CARD_CATALOG[defender.cardId];
+  return !defenderCard.fly || attackerCard.fly || attackerCard.reach;
+}
+
+// Legal targets for an attacker: while the opponent has a taunt creature the
+// attacker can hit, attacks must go at a taunt (face is blocked). Taunts the
+// attacker can't hit (e.g. a flying taunt vs a ground attacker) don't block it.
+// Stealth: while stealthed, a creature can't be targeted (and its taunt
+// doesn't block), and a stealthed attacker slips past taunts to hit anything.
+export function legalAttackTargets(
+  attacker: BoardCreature,
+  opponentBoard: BoardCreature[]
+): { face: boolean; creatures: BoardCreature[] } {
+  const hittable = opponentBoard.filter(
+    (c) => !c.stealthed && canHit(attacker, c)
+  );
+  if (attacker.stealthed) return { face: true, creatures: hittable };
+  const taunts = hittable.filter((c) => CARD_CATALOG[c.cardId].taunt);
+  if (taunts.length > 0) return { face: false, creatures: taunts };
+  return { face: true, creatures: hittable };
+}
+
+// A hit that a shield absorbs breaks the shield instead of dealing damage.
+function dealHit(target: BoardCreature, amount: number): void {
+  if (target.shieldActive) {
+    target.shieldActive = false;
+    return;
+  }
+  target.currentHealth -= amount;
 }
 
 export function attack(
@@ -196,17 +233,36 @@ export function attack(
   if (attacker.hasAttackedThisTurn)
     return { state, error: "Creature already attacked this turn" };
 
+  const legal = legalAttackTargets(attacker, opponent.board);
+
   if (target.type === "face") {
+    if (!legal.face)
+      return { state, error: "A taunt creature is blocking: attack it first" };
     opponent.hp -= attacker.currentAttack;
   } else {
     const defender = opponent.board.find(
       (c) => c.instanceId === target.creatureInstanceId
     );
     if (!defender) return { state, error: "Target creature is not on the opponent's board" };
-    defender.currentHealth -= attacker.currentAttack;
-    attacker.currentHealth -= defender.currentAttack; // counter-attack
+    if (defender.stealthed)
+      return { state, error: "That creature is stealthed and can't be targeted" };
+    if (!canHit(attacker, defender))
+      return { state, error: "Only fly or reach creatures can attack a flying creature" };
+    if (!legal.creatures.some((c) => c.instanceId === defender.instanceId))
+      return { state, error: "A taunt creature is blocking: attack it first" };
+    dealHit(defender, attacker.currentAttack);
+    dealHit(attacker, defender.currentAttack); // counter-attack
     opponent.board = opponent.board.filter((c) => c.currentHealth > 0);
     player.board = player.board.filter((c) => c.currentHealth > 0);
+  }
+
+  attacker.stealthed = false; // attacking breaks stealth
+
+  // Bomb: the attacker explodes on its hit and dies, wherever the hit landed.
+  if (CARD_CATALOG[attacker.cardId].bomb) {
+    player.board = player.board.filter(
+      (c) => c.instanceId !== attackerInstanceId
+    );
   }
 
   const winnerId = checkWinner(next);
@@ -229,7 +285,11 @@ export function endTurn(state: GameState, playerId: string): EngineResult {
   if (!next) return { state, error };
 
   next.activePlayerIndex = next.activePlayerIndex === 0 ? 1 : 0;
-  next.turnNumber += 1;
+  // A round is both players' turns: only advance the counter once the turn
+  // comes back around to whoever went first.
+  if (next.activePlayerIndex === next.firstPlayerIndex) {
+    next.turnNumber += 1;
+  }
   beginTurn(next.players[next.activePlayerIndex]);
   return { state: next };
 }
@@ -254,8 +314,8 @@ export function toClientState(
     you: {
       playerId: you.playerId,
       hp: you.hp,
-      manaCurrent: you.manaCurrent,
-      manaMax: you.manaMax,
+      coinsCurrent: you.coinsCurrent,
+      coinsMax: you.coinsMax,
       deckCount: you.deck.length,
       hand: structuredClone(you.hand),
       board: structuredClone(you.board),
@@ -263,8 +323,8 @@ export function toClientState(
     opponent: {
       playerId: opp.playerId,
       hp: opp.hp,
-      manaCurrent: opp.manaCurrent,
-      manaMax: opp.manaMax,
+      coinsCurrent: opp.coinsCurrent,
+      coinsMax: opp.coinsMax,
       deckCount: opp.deck.length,
       handCount: opp.hand.length,
       board: structuredClone(opp.board),

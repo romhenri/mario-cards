@@ -8,7 +8,7 @@ import {
   DECK_SIZE,
   endTurn,
   INITIAL_HAND_SIZE,
-  MANA_CAP,
+  COINS_CAP,
   playCard,
   sanitizeDeck,
   STARTING_HP,
@@ -20,8 +20,8 @@ function makePlayer(overrides: Partial<PlayerState> = {}): PlayerState {
   return {
     playerId: "p0",
     hp: STARTING_HP,
-    manaCurrent: 1,
-    manaMax: 1,
+    coinsCurrent: 1,
+    coinsMax: 1,
     deck: [],
     hand: [],
     board: [],
@@ -37,6 +37,8 @@ function makeCreature(overrides: Partial<BoardCreature> = {}): BoardCreature {
     currentHealth: 2,
     hasSummoningSickness: false,
     hasAttackedThisTurn: false,
+    shieldActive: false,
+    stealthed: false,
     ...overrides,
   };
 }
@@ -50,6 +52,7 @@ function makeState(overrides: Partial<GameState> = {}): GameState {
       makePlayer({ playerId: "p1" }),
     ],
     activePlayerIndex: 0,
+    firstPlayerIndex: 0,
     turnNumber: 1,
     winnerPlayerId: null,
     ...overrides,
@@ -69,10 +72,10 @@ describe("createGame", () => {
     assert.equal(second.hand.length, INITIAL_HAND_SIZE);
     assert.equal(first.deck.length, DECK_SIZE - INITIAL_HAND_SIZE);
     assert.equal(second.deck.length, DECK_SIZE - INITIAL_HAND_SIZE);
-    // First player starts with 1/1 mana; second still at 0 until their turn.
-    assert.equal(first.manaMax, 1);
-    assert.equal(first.manaCurrent, 1);
-    assert.equal(second.manaMax, 0);
+    // First player starts with 1/1 coins; second still at 0 until their turn.
+    assert.equal(first.coinsMax, 1);
+    assert.equal(first.coinsCurrent, 1);
+    assert.equal(second.coinsMax, 0);
     assert.equal(state.turnNumber, 1);
     assert.equal(state.phase, "playing");
   });
@@ -113,16 +116,16 @@ describe("sanitizeDeck", () => {
 });
 
 describe("playCard", () => {
-  it("plays a card: debits mana, moves it to the board with sickness", () => {
+  it("plays a card: debits coins, moves it to the board with sickness", () => {
     const state = makeState();
-    state.players[0].manaCurrent = 2;
-    state.players[0].manaMax = 2;
+    state.players[0].coinsCurrent = 2;
+    state.players[0].coinsMax = 2;
     state.players[0].hand = [{ instanceId: "h1", cardId: "Galoomba" }];
 
     const { state: next, error } = playCard(state, "p0", "h1");
     assert.equal(error, undefined);
     const player = next.players[0];
-    assert.equal(player.manaCurrent, 0);
+    assert.equal(player.coinsCurrent, 0);
     assert.equal(player.hand.length, 0);
     assert.equal(player.board.length, 1);
     assert.equal(player.board[0].currentAttack, 2);
@@ -132,13 +135,13 @@ describe("playCard", () => {
     assert.equal(state.players[0].hand.length, 1);
   });
 
-  it("rejects playing a card without enough mana", () => {
+  it("rejects playing a card without enough coins", () => {
     const state = makeState();
-    state.players[0].manaCurrent = 1;
+    state.players[0].coinsCurrent = 1;
     state.players[0].hand = [{ instanceId: "h1", cardId: "Galoomba" }]; // costs 2
 
     const { state: next, error } = playCard(state, "p0", "h1");
-    assert.equal(error, "Not enough mana");
+    assert.equal(error, "Not enough coins");
     assert.equal(next, state);
   });
 
@@ -151,7 +154,7 @@ describe("playCard", () => {
 
   it("rejects playing onto a full board", () => {
     const state = makeState();
-    state.players[0].manaCurrent = 10;
+    state.players[0].coinsCurrent = 10;
     state.players[0].board = Array.from({ length: BOARD_LIMIT }, () =>
       makeCreature()
     );
@@ -250,21 +253,331 @@ describe("attack", () => {
   });
 });
 
-describe("endTurn / mana progression", () => {
-  it("passes the turn, grows and refills the new player's mana, and draws", () => {
+describe("keywords", () => {
+  it("quick: enters without summoning sickness and can attack immediately", () => {
+    const state = makeState();
+    state.players[0].coinsCurrent = 2;
+    state.players[0].hand = [{ instanceId: "h1", cardId: "bob-omb" }]; // quick
+
+    const played = playCard(state, "p0", "h1");
+    assert.equal(played.error, undefined);
+    assert.equal(played.state.players[0].board[0].hasSummoningSickness, false);
+
+    const { state: next, error } = attack(played.state, "p0", "h1", {
+      type: "face",
+    });
+    assert.equal(error, undefined);
+    assert.equal(next.players[1].hp, STARTING_HP - 2);
+  });
+
+  it("bomb: enters without summoning sickness and can attack immediately", () => {
+    const state = makeState();
+    state.players[0].coinsCurrent = 3;
+    state.players[0].hand = [{ instanceId: "h1", cardId: "bullet-bill" }]; // bomb
+
+    const played = playCard(state, "p0", "h1");
+    assert.equal(played.error, undefined);
+    assert.equal(played.state.players[0].board[0].hasSummoningSickness, false);
+  });
+
+  it("bomb: dies after hitting the face", () => {
+    const state = makeState();
+    state.players[0].board = [
+      makeCreature({ instanceId: "b1", cardId: "bullet-bill", currentAttack: 4, currentHealth: 1 }),
+    ];
+
+    const { state: next, error } = attack(state, "p0", "b1", { type: "face" });
+    assert.equal(error, undefined);
+    assert.equal(next.players[1].hp, STARTING_HP - 4);
+    assert.equal(next.players[0].board.length, 0); // exploded
+  });
+
+  it("bomb: dies after hitting a creature, even one it would have out-traded", () => {
+    const state = makeState();
+    // 6/2 Banzai Bill vs 1/4 defender: without bomb it would survive at 6/1.
+    state.players[0].board = [
+      makeCreature({ instanceId: "b1", cardId: "banzai-bill", currentAttack: 6, currentHealth: 2 }),
+    ];
+    state.players[1].board = [
+      makeCreature({ instanceId: "d1", cardId: "goomba", currentAttack: 1, currentHealth: 4 }),
+    ];
+
+    const { state: next, error } = attack(state, "p0", "b1", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(error, undefined);
+    assert.equal(next.players[1].board.length, 0); // defender killed
+    assert.equal(next.players[0].board.length, 0); // bomb exploded
+  });
+
+  it("bomb: lethal face damage still ends the game", () => {
+    const state = makeState();
+    state.players[1].hp = 4;
+    state.players[0].board = [
+      makeCreature({ instanceId: "b1", cardId: "bullet-bill", currentAttack: 4, currentHealth: 1 }),
+    ];
+
+    const { state: next, error } = attack(state, "p0", "b1", { type: "face" });
+    assert.equal(error, undefined);
+    assert.equal(next.phase, "finished");
+    assert.equal(next.winnerPlayerId, "p0");
+  });
+
+  it("shield: enters with an active shield that absorbs the first hit", () => {
+    const state = makeState();
+    state.players[0].coinsCurrent = 3;
+    state.players[0].hand = [{ instanceId: "h1", cardId: "koopa-troopa" }]; // shield
+
+    const played = playCard(state, "p0", "h1");
+    assert.equal(played.state.players[0].board[0].shieldActive, true);
+  });
+
+  it("shield: the first hit breaks the shield instead of dealing damage", () => {
+    const state = makeState();
+    state.players[0].board = [
+      makeCreature({ instanceId: "a1", currentAttack: 5, currentHealth: 4 }),
+    ];
+    state.players[1].board = [
+      makeCreature({
+        instanceId: "d1",
+        cardId: "koopa-troopa",
+        currentAttack: 2,
+        currentHealth: 3,
+        shieldActive: true,
+      }),
+    ];
+
+    const first = attack(state, "p0", "a1", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(first.error, undefined);
+    const defender = first.state.players[1].board[0];
+    assert.equal(defender.currentHealth, 3); // untouched
+    assert.equal(defender.shieldActive, false); // shield spent
+    // Counter-attack still lands on the attacker.
+    assert.equal(first.state.players[0].board[0].currentHealth, 2);
+
+    // Second hit now deals damage normally.
+    const nextTurn = endTurn(first.state, "p0");
+    const back = endTurn(nextTurn.state, "p1");
+    const second = attack(back.state, "p0", "a1", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(second.error, undefined);
+    assert.equal(second.state.players[1].board.length, 0); // 5 dmg kills the 3 hp koopa
+  });
+
+  it("shield: counter-attack damage is also absorbed by the attacker's shield", () => {
+    const state = makeState();
+    state.players[0].board = [
+      makeCreature({
+        instanceId: "a1",
+        cardId: "koopa-troopa",
+        currentAttack: 2,
+        currentHealth: 3,
+        shieldActive: true,
+      }),
+    ];
+    state.players[1].board = [
+      makeCreature({ instanceId: "d1", currentAttack: 5, currentHealth: 2 }),
+    ];
+
+    const { state: next, error } = attack(state, "p0", "a1", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(error, undefined);
+    assert.equal(next.players[1].board.length, 0); // defender died
+    const attacker = next.players[0].board[0];
+    assert.equal(attacker.currentHealth, 3); // counter absorbed
+    assert.equal(attacker.shieldActive, false);
+  });
+
+  it("taunt: blocks face attacks and non-taunt creature targets while alive", () => {
+    const state = makeState();
+    state.players[0].board = [makeCreature({ instanceId: "a1" })];
+    state.players[1].board = [
+      makeCreature({ instanceId: "t1", cardId: "piranha-plant", currentAttack: 3, currentHealth: 3 }),
+      makeCreature({ instanceId: "d1", cardId: "goomba", currentAttack: 1, currentHealth: 1 }),
+    ];
+
+    const face = attack(state, "p0", "a1", { type: "face" });
+    assert.equal(face.error, "A taunt creature is blocking: attack it first");
+
+    const nonTaunt = attack(state, "p0", "a1", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(nonTaunt.error, "A taunt creature is blocking: attack it first");
+
+    const taunt = attack(state, "p0", "a1", {
+      type: "creature",
+      creatureInstanceId: "t1",
+    });
+    assert.equal(taunt.error, undefined);
+  });
+
+  it("taunt: once the taunt dies, other targets open up again", () => {
+    const state = makeState();
+    state.players[0].board = [
+      makeCreature({ instanceId: "a1", currentAttack: 3, currentHealth: 4 }),
+      makeCreature({ instanceId: "a2" }),
+    ];
+    state.players[1].board = [
+      makeCreature({ instanceId: "t1", cardId: "piranha-plant", currentAttack: 3, currentHealth: 3 }),
+    ];
+
+    const first = attack(state, "p0", "a1", {
+      type: "creature",
+      creatureInstanceId: "t1",
+    });
+    assert.equal(first.error, undefined);
+    assert.equal(first.state.players[1].board.length, 0); // taunt died
+
+    const face = attack(first.state, "p0", "a2", { type: "face" });
+    assert.equal(face.error, undefined);
+  });
+
+  it("stealth: enters play stealthed", () => {
+    const state = makeState();
+    state.players[0].coinsCurrent = 2;
+    state.players[0].hand = [{ instanceId: "h1", cardId: "gloomba" }]; // stealth
+
+    const played = playCard(state, "p0", "h1");
+    assert.equal(played.error, undefined);
+    assert.equal(played.state.players[0].board[0].stealthed, true);
+  });
+
+  it("stealth: attacker ignores taunt, and attacking breaks stealth", () => {
+    const state = makeState();
+    state.players[0].board = [
+      makeCreature({ instanceId: "s1", cardId: "gloomba", currentAttack: 2, currentHealth: 1, stealthed: true }),
+      makeCreature({ instanceId: "s2", cardId: "monty-mole", currentAttack: 3, currentHealth: 2, stealthed: true }),
+    ];
+    state.players[1].board = [
+      makeCreature({ instanceId: "t1", cardId: "piranha-plant", currentAttack: 3, currentHealth: 3 }),
+      makeCreature({ instanceId: "d1", cardId: "goomba", currentAttack: 1, currentHealth: 4 }),
+    ];
+
+    // Face attack goes through despite the taunt, then stealth is gone.
+    const face = attack(state, "p0", "s1", { type: "face" });
+    assert.equal(face.error, undefined);
+    assert.equal(face.state.players[1].hp, STARTING_HP - 2);
+    assert.equal(face.state.players[0].board[0].stealthed, false);
+
+    // Non-taunt creature is also a legal target for a stealthed attacker.
+    const creature = attack(face.state, "p0", "s2", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(creature.error, undefined);
+    const s2 = creature.state.players[0].board.find((c) => c.instanceId === "s2");
+    assert.equal(s2?.stealthed, false);
+  });
+
+  it("stealth: a stealthed creature can't be targeted until it attacks", () => {
+    const state = makeState();
+    state.players[0].board = [makeCreature({ instanceId: "a1" })];
+    state.players[1].board = [
+      makeCreature({ instanceId: "d1", cardId: "gloomba", currentAttack: 2, currentHealth: 1, stealthed: true }),
+    ];
+
+    const hidden = attack(state, "p0", "a1", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(hidden.error, "That creature is stealthed and can't be targeted");
+
+    // Once it has attacked (stealth broken), it becomes targetable.
+    state.players[1].board[0].stealthed = false;
+    const open = attack(state, "p0", "a1", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(open.error, undefined);
+  });
+
+  it("stealth: a stealthed taunt doesn't block attacks while hidden", () => {
+    const state = makeState();
+    state.players[0].board = [makeCreature({ instanceId: "a1" })];
+    // No stealth+taunt card exists in the catalog, so simulate the state:
+    // a taunt creature that is currently stealthed must not block.
+    state.players[1].board = [
+      makeCreature({ instanceId: "t1", cardId: "piranha-plant", currentAttack: 3, currentHealth: 3, stealthed: true }),
+    ];
+
+    const { error } = attack(state, "p0", "a1", { type: "face" });
+    assert.equal(error, undefined);
+  });
+
+  it("fly: only fly or reach attackers can target a flying creature", () => {
+    const state = makeState();
+    state.players[0].board = [
+      makeCreature({ instanceId: "ground", cardId: "Galoomba" }),
+      makeCreature({ instanceId: "flyer", cardId: "fly-guy", currentAttack: 3, currentHealth: 2 }),
+      makeCreature({ instanceId: "reacher", cardId: "hammer-bro", currentAttack: 3, currentHealth: 3 }),
+    ];
+    state.players[1].board = [
+      makeCreature({ instanceId: "d1", cardId: "paragoomba", currentAttack: 1, currentHealth: 6 }),
+    ];
+
+    const grounded = attack(state, "p0", "ground", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(
+      grounded.error,
+      "Only fly or reach creatures can attack a flying creature"
+    );
+
+    const byFly = attack(state, "p0", "flyer", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(byFly.error, undefined);
+
+    const byReach = attack(byFly.state, "p0", "reacher", {
+      type: "creature",
+      creatureInstanceId: "d1",
+    });
+    assert.equal(byReach.error, undefined);
+  });
+
+  it("fly: ground creatures can still attack the face past a flying defender", () => {
+    const state = makeState();
+    state.players[0].board = [makeCreature({ instanceId: "a1" })];
+    state.players[1].board = [
+      makeCreature({ instanceId: "d1", cardId: "paragoomba", currentAttack: 1, currentHealth: 2 }),
+    ];
+
+    const { error } = attack(state, "p0", "a1", { type: "face" });
+    assert.equal(error, undefined);
+  });
+});
+
+describe("endTurn / coins progression", () => {
+  it("passes the turn, grows and refills the new player's coins, and draws", () => {
     const state = makeState();
     state.players[1].deck = ["Galoomba", "Galoomba"];
-    state.players[1].manaMax = 3;
-    state.players[1].manaCurrent = 0;
+    state.players[1].coinsMax = 3;
+    state.players[1].coinsCurrent = 0;
 
     const { state: next, error } = endTurn(state, "p0");
     assert.equal(error, undefined);
     assert.equal(next.activePlayerIndex, 1);
-    assert.equal(next.turnNumber, 2);
-    assert.equal(next.players[1].manaMax, 4);
-    assert.equal(next.players[1].manaCurrent, 4);
+    // Round counter only advances once both players have played.
+    assert.equal(next.turnNumber, 1);
+    assert.equal(next.players[1].coinsMax, 4);
+    assert.equal(next.players[1].coinsCurrent, 4);
     assert.equal(next.players[1].hand.length, 1);
     assert.equal(next.players[1].deck.length, 1);
+
+    const { state: afterRound } = endTurn(next, "p1");
+    assert.equal(afterRound.activePlayerIndex, 0);
+    assert.equal(afterRound.turnNumber, 2);
   });
 
   it("clears summoning sickness and attack flags at the owner's turn start", () => {
@@ -277,15 +590,15 @@ describe("endTurn / mana progression", () => {
     assert.equal(next.players[1].board[0].hasAttackedThisTurn, false);
   });
 
-  it("caps mana at MANA_CAP and skips the draw on an empty deck without damage", () => {
+  it("caps coins at COINS_CAP and skips the draw on an empty deck without damage", () => {
     const state = makeState();
-    state.players[1].manaMax = MANA_CAP;
+    state.players[1].coinsMax = COINS_CAP;
     state.players[1].deck = [];
     state.players[1].hp = 10;
 
     const { state: next } = endTurn(state, "p0");
-    assert.equal(next.players[1].manaMax, MANA_CAP);
-    assert.equal(next.players[1].manaCurrent, MANA_CAP);
+    assert.equal(next.players[1].coinsMax, COINS_CAP);
+    assert.equal(next.players[1].coinsCurrent, COINS_CAP);
     assert.equal(next.players[1].hand.length, 0);
     assert.equal(next.players[1].hp, 10); // no fatigue damage in v1
   });

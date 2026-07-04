@@ -19,6 +19,8 @@ export type CardId =
   | "ice-bro"
   | "bob-omb"
   | "para-bomb"
+  | "bullet-bill"
+  | "banzai-bill"
   | "magikoopa"
   | "monty-mole"
   | "morty-mole"
@@ -26,16 +28,31 @@ export type CardId =
 
 export type CardRarity = "common" | "rare" | "legend";
 
+// Creature families, used to group cards in the catalog and deck builder
+export type CreatureType =
+  | "goomba"
+  | "koopa"
+  | "shy-guy"
+  | "plant"
+  | "bro"
+  | "bomb"
+  | "mole"
+  | "ghost"
+  | "chomp"
+  | "insect";
+
 export interface CardDefinition {
   id: CardId;
   name: string; // display name, e.g. "Goomba"
-  cost: number; // mana cost
+  creatureType: CreatureType;
+  cost: number; // coins cost
   attack: number; // base attack
   health: number; // base health
   rarity: CardRarity;
   stealth: boolean;
   taunt: boolean;
   quick: boolean;
+  bomb: boolean; // attacks the turn it enters (like quick) but dies after its hit
   shield: boolean;
   fly: boolean;
   reach: boolean;
@@ -57,13 +74,17 @@ export interface BoardCreature {
   currentHealth: number;
   hasSummoningSickness: boolean;
   hasAttackedThisTurn: boolean;
+  // Shield keyword: absorbs the next hit, then breaks
+  shieldActive: boolean;
+  // Stealth keyword: untargetable and ignores taunt, until it attacks
+  stealthed: boolean;
 }
 
 export interface PlayerState {
   playerId: string;
   hp: number;
-  manaCurrent: number;
-  manaMax: number;
+  coinsCurrent: number;
+  coinsMax: number;
   deck: CardId[]; // top of deck = last element (draw = pop)
   hand: HandCard[];
   board: BoardCreature[];
@@ -76,6 +97,9 @@ export interface GameState {
   phase: GamePhase;
   players: [PlayerState, PlayerState];
   activePlayerIndex: 0 | 1;
+  // Who took the very first turn; the round counter only advances when the
+  // turn comes back around to this player (i.e. after both players played)
+  firstPlayerIndex: 0 | 1;
   turnNumber: number;
   winnerPlayerId: string | null;
 }
@@ -95,8 +119,8 @@ export type PlayerAction =
 export interface SelfView {
   playerId: string;
   hp: number;
-  manaCurrent: number;
-  manaMax: number;
+  coinsCurrent: number;
+  coinsMax: number;
   deckCount: number;
   hand: HandCard[];
   board: BoardCreature[];
@@ -105,8 +129,8 @@ export interface SelfView {
 export interface OpponentView {
   playerId: string;
   hp: number;
-  manaCurrent: number;
-  manaMax: number;
+  coinsCurrent: number;
+  coinsMax: number;
   deckCount: number;
   handCount: number;
   board: BoardCreature[];

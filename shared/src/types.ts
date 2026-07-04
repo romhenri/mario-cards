@@ -46,7 +46,19 @@ export type CardId =
   | "morty-mole"
   | "rocky-wrench"
   | "chomp"
-  | "thwomp";
+  | "thwomp"
+  | "daisy"
+  | "peach"
+  | "rosaline"
+  | "toad"
+  | "toadette"
+  | "mario"
+  | "luigi"
+  | "yoshi"
+  | "donkey-kong"
+  | "plessiee"
+  | "wario"
+  | "waluigi";
 
 export type CardRarity = "common" | "rare" | "legend";
 
@@ -63,7 +75,11 @@ export type CreatureType =
   | "chomp"
   | "insect"
   | "bird"
-  | "thwomp";
+  | "thwomp"
+  | "princess"
+  | "toad"
+  | "hero"
+  | "dino";
 
 export interface CardDefinition {
   id: CardId;

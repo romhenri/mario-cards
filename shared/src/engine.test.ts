@@ -109,7 +109,7 @@ describe("sanitizeDeck", () => {
 
   it("rejects wrong sizes, unknown ids, and non-arrays", () => {
     assert.equal(sanitizeDeck(Array(DECK_SIZE - 1).fill("goomba")), null);
-    assert.equal(sanitizeDeck(Array(DECK_SIZE).fill("mario")), null);
+    assert.equal(sanitizeDeck(Array(DECK_SIZE).fill("not-a-real-card")), null);
     assert.equal(sanitizeDeck("goomba"), null);
     assert.equal(sanitizeDeck(null), null);
   });

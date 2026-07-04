@@ -32,6 +32,23 @@ function toDeck(counts: Counts): CardId[] {
 
 type SortMode = "type" | "cost";
 
+const MAX_LEGEND_CARDS = 2;
+
+const isLegend = (id: CardId) => CARD_CATALOG[id].rarity === "legend";
+
+/** The card with the most copies in the deck (first added wins ties). */
+function mostPopular(counts: Counts): CardId | null {
+  let best: CardId | null = null;
+  let bestCount = 0;
+  for (const [id, count] of Object.entries(counts)) {
+    if ((count ?? 0) > bestCount) {
+      best = id as CardId;
+      bestCount = count ?? 0;
+    }
+  }
+  return best;
+}
+
 export default function DeckPage() {
   const [slots, setSlots] = useState<(SavedDeck | null)[]>(() =>
     Array(DECK_SLOT_COUNT).fill(null)
@@ -86,9 +103,30 @@ export default function DeckPage() {
   }, [sortMode]);
   const total = Object.values(counts).reduce((sum, n) => sum + (n ?? 0), 0);
   const complete = total === DECK_SIZE;
+  const legendTotal = Object.entries(counts).reduce(
+    (sum, [id, n]) => sum + (isLegend(id as CardId) ? n ?? 0 : 0),
+    0
+  );
+  const legendIds = Object.keys(counts).filter(
+    (id) => (counts[id as CardId] ?? 0) > 0 && isLegend(id as CardId)
+  ) as CardId[];
+
+  // The cover follows the deck contents: a deck with legends is fronted by
+  // its starred legend (first legend if none starred); otherwise the most
+  // popular creature.
+  const effectiveCover: CardId | null =
+    legendIds.length > 0
+      ? cover && legendIds.includes(cover)
+        ? cover
+        : legendIds[0]
+      : mostPopular(counts);
 
   const add = (id: CardId) => {
     if (total >= DECK_SIZE) return;
+    if (isLegend(id) && legendTotal >= MAX_LEGEND_CARDS) {
+      setSavedMessage(`A deck can hold at most ${MAX_LEGEND_CARDS} legend cards.`);
+      return;
+    }
     setSavedMessage(null);
     setDirty(true);
     setCounts((c) => ({ ...c, [id]: (c[id] ?? 0) + 1 }));
@@ -120,7 +158,7 @@ export default function DeckPage() {
     const deck = toDeck(counts);
     const saved: SavedDeck = {
       name: deckName.trim() || `Deck ${selectedSlot + 1}`,
-      cover: cover && (counts[cover] ?? 0) > 0 ? cover : deck[0],
+      cover: effectiveCover ?? deck[0],
       cards: deck,
     };
     saveDeckSlot(selectedSlot, saved);
@@ -162,14 +200,16 @@ export default function DeckPage() {
       <section className="deck-editor-panel" aria-label="Deck creation">
         <span
           className="deck-slot-card-art-box"
-          style={cover ? cardStyle(CARD_CATALOG[cover]) : undefined}
+          style={
+            effectiveCover ? cardStyle(CARD_CATALOG[effectiveCover]) : undefined
+          }
         >
-          {cover ? (
+          {effectiveCover ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               className="deck-slot-card-art"
-              src={CARD_CATALOG[cover].image}
-              alt={CARD_CATALOG[cover].name}
+              src={CARD_CATALOG[effectiveCover].image}
+              alt={CARD_CATALOG[effectiveCover].name}
               draggable={false}
             />
           ) : (
@@ -249,7 +289,10 @@ export default function DeckPage() {
                 className="card playable"
                 style={cardStyle(def)}
                 onClick={() => add(def.id)}
-                disabled={total >= DECK_SIZE}
+                disabled={
+                  total >= DECK_SIZE ||
+                  (def.rarity === "legend" && legendTotal >= MAX_LEGEND_CARDS)
+                }
                 title={`Add ${def.name}`}
               >
                 <CardFace
@@ -272,19 +315,26 @@ export default function DeckPage() {
                 <button
                   className="deck-plus"
                   onClick={() => add(def.id)}
-                  disabled={total >= DECK_SIZE}
+                  disabled={
+                    total >= DECK_SIZE ||
+                    (def.rarity === "legend" && legendTotal >= MAX_LEGEND_CARDS)
+                  }
                   title={`Add one ${def.name}`}
                 >
                   +
                 </button>
-                <button
-                  className={`deck-cover ${cover === def.id ? "active" : ""}`}
-                  onClick={() => pickCover(def.id)}
-                  disabled={count === 0}
-                  title={`Make ${def.name} the deck cover`}
-                >
-                  ★
-                </button>
+                {def.rarity === "legend" && (
+                  <button
+                    className={`deck-cover ${
+                      effectiveCover === def.id ? "active" : ""
+                    }`}
+                    onClick={() => pickCover(def.id)}
+                    disabled={count === 0}
+                    title={`Make ${def.name} the favorite legend`}
+                  >
+                    ★
+                  </button>
+                )}
               </div>
             </div>
             </Fragment>

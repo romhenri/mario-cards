@@ -1153,6 +1153,21 @@ a {
   white-space: nowrap;
 }
 
+/* Status badge under the slot: star (legend deck), mushroom (standard
+   deck) or nothing (empty slot); the row keeps its height either way. */
+.deck-slot-card-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+}
+
+.deck-slot-card-badge img {
+  width: 18px;
+  height: 18px;
+  image-rendering: pixelated;
+}
+
 /* --- Deck choose modal (match start) --- */
 .deck-choose {
   text-align: center;

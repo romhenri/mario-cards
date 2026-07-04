@@ -41,13 +41,20 @@ function newInstanceId(): string {
 }
 
 const ALL_CARD_IDS = Object.keys(CARD_CATALOG) as CardId[];
+const NON_LEGEND_CARD_IDS = ALL_CARD_IDS.filter(
+  (id) => CARD_CATALOG[id].rarity !== "legend"
+);
 
 // Fallback deck for players without a custom one: DECK_SIZE random picks
 // from the catalog (duplicates possible).
-export function buildRandomDeck(rng: () => number = Math.random): CardId[] {
+export function buildRandomDeck(
+  rng: () => number = Math.random,
+  options?: { excludeLegends?: boolean }
+): CardId[] {
+  const pool = options?.excludeLegends ? NON_LEGEND_CARD_IDS : ALL_CARD_IDS;
   const deck: CardId[] = [];
   for (let i = 0; i < DECK_SIZE; i++) {
-    deck.push(ALL_CARD_IDS[Math.floor(rng() * ALL_CARD_IDS.length)]);
+    deck.push(pool[Math.floor(rng() * pool.length)]);
   }
   return deck;
 }

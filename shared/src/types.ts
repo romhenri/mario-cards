@@ -6,12 +6,28 @@ export type CardId =
   | "paragoomba"
   | "grand-goomba"
   | "gloomba"
+  | "cat-goomba"
   | "koopa-troopa"
   | "koopa-paratroopa"
+  | "lakitu"
+  | "dry-bones"
+  | "paradrybones"
+  | "spike"
+  | "spike2"
+  | "bowser-jr"
   | "shy-guy"
   | "fly-guy"
   | "piranha-plant"
   | "venus-fire-trap"
+  | "pokey"
+  | "stingby"
+  | "ant-trooper"
+  | "biddybud"
+  | "para-biddybud"
+  | "flutter"
+  | "wiggler"
+  | "fuzzler"
+  | "conkdor"
   | "hammer-bro"
   | "sledge-bro"
   | "boomerang-bro"
@@ -21,10 +37,16 @@ export type CardId =
   | "para-bomb"
   | "bullet-bill"
   | "banzai-bill"
+  | "king-bob-omb"
   | "magikoopa"
+  | "boo"
+  | "big-boo"
+  | "king-boo"
   | "monty-mole"
   | "morty-mole"
-  | "rocky-wrench";
+  | "rocky-wrench"
+  | "chomp"
+  | "thwomp";
 
 export type CardRarity = "common" | "rare" | "legend";
 
@@ -39,7 +61,9 @@ export type CreatureType =
   | "mole"
   | "ghost"
   | "chomp"
-  | "insect";
+  | "insect"
+  | "bird"
+  | "thwomp";
 
 export interface CardDefinition {
   id: CardId;

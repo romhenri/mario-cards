@@ -21,7 +21,8 @@ export function CpuGameScreen({ chooseDeck }: CpuGameScreenProps) {
   const [deck, setDeck] = useState<CardId[] | null | undefined>(
     chooseDeck ? undefined : null
   );
-  const { ui, handleAction, resetGame } = useCpuGame(deck);
+  // Quick Match (no deck chooser) keeps legend cards out of the random decks.
+  const { ui, handleAction, resetGame } = useCpuGame(deck, !chooseDeck);
 
   return (
     <main className="page">

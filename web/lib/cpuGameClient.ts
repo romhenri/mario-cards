@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import {
   attack,
+  buildRandomDeck,
   createGame,
   endTurn,
   playCard,
@@ -52,8 +53,13 @@ export interface CpuGame {
 }
 
 /** `deck` is the human's chosen deck (null = random). While it is still
- * `undefined` (deck-choose modal open) the game does not start. */
-export function useCpuGame(deck: CardId[] | null | undefined): CpuGame {
+ * `undefined` (deck-choose modal open) the game does not start.
+ * `excludeLegends` keeps legend-rarity cards out of the random decks
+ * (used by Quick Match). */
+export function useCpuGame(
+  deck: CardId[] | null | undefined,
+  excludeLegends = false
+): CpuGame {
   const [ui, dispatch] = useReducer(gameUiReducer, initialGameUiState);
   const stateRef = useRef<GameState | null>(null);
   const cpuRunningRef = useRef(false);
@@ -105,13 +111,15 @@ export function useCpuGame(deck: CardId[] | null | undefined): CpuGame {
   const resetGame = useCallback(() => {
     // Human uses the deck chosen at match start (if any); the CPU gets a
     // random one.
+    const randomDeck = () =>
+      buildRandomDeck(Math.random, { excludeLegends });
     const state = createGame(HUMAN_PLAYER_ID, CPU_PLAYER_ID, undefined, [
-      deck ?? null,
-      null,
+      deck ?? randomDeck(),
+      randomDeck(),
     ]);
     publish(state);
     if (state.activePlayerIndex === CPU_INDEX) void runCpuTurn();
-  }, [deck, publish, runCpuTurn]);
+  }, [deck, excludeLegends, publish, runCpuTurn]);
 
   useEffect(() => {
     if (deck === undefined) return; // still choosing a deck

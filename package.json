@@ -7,10 +7,11 @@
     "web"
   ],
   "scripts": {
-    "dev": "npm run build:shared && concurrently -n server,web -c blue,green \"npm:dev:server\" \"npm:dev:web\"",
+    "dev": "npm run build:shared && concurrently -n shared,server,web -c yellow,blue,green \"npm:dev:shared\" \"npm:dev:server\" \"npm:dev:web\"",
     "start": "npm run build && concurrently -n server,web -c blue,green \"npm:start:server\" \"npm:start:web\"",
     "build": "npm run build -w @mario-cards/shared && npm run build -w @mario-cards/web",
     "build:shared": "npm run build -w @mario-cards/shared",
+    "dev:shared": "npm run dev -w @mario-cards/shared",
     "test": "npm test -w @mario-cards/shared",
     "dev:server": "npm run dev -w @mario-cards/server",
     "dev:web": "npm run dev -w @mario-cards/web",

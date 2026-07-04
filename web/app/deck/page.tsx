@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { CARD_CATALOG, DECK_SIZE, type CardId } from "@mario-cards/shared";
 import { CardFace, cardStyle } from "../../components/board/CardFace";
@@ -23,22 +23,33 @@ function toDeck(counts: Counts): CardId[] {
   return deck;
 }
 
+type SortMode = "type" | "cost";
+
+// Creature families in catalog order (cards.json is grouped by type)
+const TYPE_ORDER = [...new Set(Object.values(CARD_CATALOG).map((c) => c.creatureType))];
+
 export default function DeckPage() {
   const [counts, setCounts] = useState<Counts>({});
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
+  const [sortMode, setSortMode] = useState<SortMode>("type");
 
   useEffect(() => {
     const saved = loadDeck();
     if (saved) setCounts(toCounts(saved));
   }, []);
 
-  const cards = useMemo(
-    () =>
-      Object.values(CARD_CATALOG).sort(
-        (a, b) => a.cost - b.cost || a.name.localeCompare(b.name)
-      ),
-    []
-  );
+  const cards = useMemo(() => {
+    const all = Object.values(CARD_CATALOG);
+    if (sortMode === "cost") {
+      return all.sort((a, b) => a.cost - b.cost || a.name.localeCompare(b.name));
+    }
+    return all.sort(
+      (a, b) =>
+        TYPE_ORDER.indexOf(a.creatureType) - TYPE_ORDER.indexOf(b.creatureType) ||
+        a.cost - b.cost ||
+        a.name.localeCompare(b.name)
+    );
+  }, [sortMode]);
   const total = Object.values(counts).reduce((sum, n) => sum + (n ?? 0), 0);
   const complete = total === DECK_SIZE;
 
@@ -88,15 +99,37 @@ export default function DeckPage() {
         <button className="deck-clear" onClick={handleClear}>
           Clear
         </button>
+        <div className="deck-sort" role="group" aria-label="Sort cards">
+          <button
+            className={`deck-sort-option ${sortMode === "type" ? "active" : ""}`}
+            onClick={() => setSortMode("type")}
+          >
+            By type
+          </button>
+          <button
+            className={`deck-sort-option ${sortMode === "cost" ? "active" : ""}`}
+            onClick={() => setSortMode("cost")}
+          >
+            By cost
+          </button>
+        </div>
         <Link href="/">Back to menu</Link>
       </div>
       <p className="info-message">{savedMessage}</p>
 
-      <div className="deck-grid">
-        {cards.map((def) => {
+      <div className={`deck-grid ${sortMode === "cost" ? "by-cost" : ""}`}>
+        {cards.map((def, i) => {
           const count = counts[def.id] ?? 0;
+          const newCostTier =
+            sortMode === "cost" && (i === 0 || cards[i - 1].cost !== def.cost);
           return (
-            <div key={def.id} className={`deck-slot ${count > 0 ? "picked" : ""}`}>
+            <Fragment key={def.id}>
+            {newCostTier && (
+              <div className="deck-cost-divider" role="separator">
+                <span className="deck-cost-divider-label">Cost {def.cost}</span>
+              </div>
+            )}
+            <div className={`deck-slot ${count > 0 ? "picked" : ""}`}>
               <button
                 className="card playable"
                 style={cardStyle(def)}
@@ -131,6 +164,7 @@ export default function DeckPage() {
                 </button>
               </div>
             </div>
+            </Fragment>
           );
         })}
       </div>

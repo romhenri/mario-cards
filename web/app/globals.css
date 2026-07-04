@@ -63,27 +63,117 @@ button:disabled {
   font-size: 12px;
 }
 
-/* --- Home / mode select --- */
-.mode-select {
+/* Mute toggle pinned to the header's right corner */
+.mute-button {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #3a3a5e;
+  border-radius: 50%;
+  background: #24244a;
+  color: #9aa0d0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mute-button:hover {
+  border-color: #9aa0d0;
+}
+
+/* --- Home / mode select ---
+   Chunky tile menu; colors match the card colorType palette. */
+.home-menu {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 480px;
+  margin: 40px auto 24px;
+}
+
+.menu-tile {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   align-items: center;
-  margin-top: 48px;
+  justify-content: center;
+  gap: 6px;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  border: 3px solid var(--tile-border);
+  box-shadow: 0 6px 0 var(--tile-border), 0 10px 18px rgba(0, 0, 0, 0.35);
+  background: var(--tile-bg);
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-.mode-button {
-  width: 260px;
-  padding: 16px;
-  font-size: 18px;
-  background: #16213e;
-  color: #eaeaea;
-  border: 2px solid #4a4e8f;
-  border-radius: 8px;
+.menu-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 0 var(--tile-border), 0 14px 22px rgba(0, 0, 0, 0.4);
+  filter: brightness(1.08);
 }
 
-.mode-button:hover {
-  background: #1f2b52;
+.menu-tile:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 var(--tile-border), 0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+.menu-tile.wide {
+  grid-column: 1 / -1;
+  aspect-ratio: auto;
+  padding: 20px;
+}
+
+.menu-tile.green {
+  --tile-bg: #2e7d32;
+  --tile-border: #1e5121;
+}
+
+.menu-tile.red {
+  --tile-bg: #c62828;
+  --tile-border: #811a1a;
+}
+
+.menu-tile.blue {
+  --tile-bg: #1565c0;
+  --tile-border: #0e427d;
+}
+
+.menu-tile-icon {
+  font-size: 42px;
+  line-height: 1;
+}
+
+.menu-tile-label {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.menu-tile-sub {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+@media (max-width: 420px) {
+  .home-menu {
+    gap: 12px;
+  }
+
+  .menu-tile-label {
+    font-size: 16px;
+  }
+
+  .menu-tile-icon {
+    font-size: 34px;
+  }
 }
 
 /* --- Game board layout --- */
@@ -111,8 +201,33 @@ button:disabled {
 }
 
 .divider {
+  position: relative;
   border-top: 1px solid #3a3f6e;
   margin: 4px 0;
+}
+
+/* Turn counter + End Turn, floating centered over the frontier line */
+.frontier-box {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 14px;
+  background: #16213e;
+  border: 1px solid #4a4e8f50;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.frontier-box .turn-count {
+  color: #9aa0d0;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 /* --- HUD --- */
@@ -151,7 +266,6 @@ button:disabled {
 
 .turn-dot.on {
   background: #ffd700;
-  box-shadow: 0 0 6px #ffd700;
 }
 
 /* Fixed width so 1- and 2-digit HP keep the bar in the same place */
@@ -183,17 +297,39 @@ button:disabled {
   background: #000;
 }
 
-.hud .mana {
+.hud .coins {
   color: #6fb7ff;
   font-weight: bold;
 }
 
-.hud .face-target {
+/* "Attack face" and Cancel share the same red look; they flank the
+   frontier box without shifting its centered position. */
+.face-target {
   background: #7a1f2b;
   color: #fff;
   border: 2px solid #ff5c72;
   border-radius: 6px;
   padding: 6px 10px;
+}
+
+.face-target.attack-face {
+  background: #b35a00;
+  border-color: #ffa94d;
+}
+
+.frontier-side {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+.frontier-side.left {
+  right: calc(100% + 10px);
+}
+
+.frontier-side.right {
+  left: calc(100% + 10px);
 }
 
 /* --- Cards and creatures --- */
@@ -247,7 +383,7 @@ button:disabled {
   padding-left: 28px;
 }
 
-/* Mana cost: blue circle pinned to the card's top-left corner */
+/* Coins cost: blue circle pinned to the card's top-left corner */
 .cost-badge {
   position: absolute;
   top: 4px;
@@ -297,6 +433,12 @@ button:disabled {
   color: #fff;
 }
 
+/* Damaged creature: health below the printed value */
+.stat.health.hurt {
+  background: #7a0f0f;
+  color: #ff5252;
+}
+
 /* Art stretches to fill the space the name/stats rows leave free; a white
    half-opacity circle sits behind the PNG to lift it off the colorType */
 .card-art-box {
@@ -331,26 +473,32 @@ button:disabled {
   pointer-events: none;
 }
 
-/* Keyword strip below the stats (Quick / Fly / Reach / Stealth / Taunt /
-   Shield). Always present so cards without keywords keep the same layout. */
+/* Keyword strip below the stats (Quick / Bomb / Fly / Reach / Stealth /
+   Taunt / Shield). Always present so cards without keywords keep the same
+   layout. */
 .keywords {
   display: flex;
   gap: 3px;
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-  min-height: 15px;
+  min-height: 24px;
 }
 
 .keyword {
-  font-size: 9px;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 1px 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 4px;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0.4);
   color: #fff;
+}
+
+.keyword svg {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 
 .card.playable:hover {
@@ -420,6 +568,24 @@ button:disabled {
   opacity: 0.6;
 }
 
+/* Stealthed: shadowy and untargetable until it attacks */
+.creature.stealthed {
+  opacity: 0.55;
+  border-style: dashed;
+}
+
+/* Own stealth creature ready to act: keep the dashed border as the stealth
+   cue, but drop the shadow so it doesn't read as exhausted */
+.creature.stealthed.can-attack,
+.creature.stealthed.selected {
+  opacity: 1;
+}
+
+/* Shield keyword still unbroken: golden aura until the first hit lands */
+.creature.shielded {
+  box-shadow: 0 0 0 3px #ffd75e, 0 0 12px 2px rgba(255, 215, 94, 0.7);
+}
+
 /* --- Controls --- */
 .hand-row {
   display: flex;
@@ -437,7 +603,7 @@ button:disabled {
 }
 
 .end-turn {
-  padding: 10px 20px;
+  padding: 4px 8px;
   font-size: 16px;
   background: #2e7d32;
   color: #fff;
@@ -574,12 +740,69 @@ a {
   border-color: #ffd700;
 }
 
+.deck-sort {
+  display: flex;
+  border: 2px solid #4a4e8f;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.deck-sort-option {
+  padding: 8px 16px;
+  font-size: 14px;
+  background: #16213e;
+  color: #9aa0d0;
+  border: none;
+  border-radius: 0;
+}
+
+.deck-sort-option + .deck-sort-option {
+  border-left: 2px solid #4a4e8f;
+}
+
+.deck-sort-option:hover {
+  color: #eaeaea;
+}
+
+.deck-sort-option.active {
+  background: #0f3460;
+  color: #ffd700;
+}
+
 .deck-grid {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 16px;
+}
+
+/* Cost view aligns each tier's row to the left, under its divider */
+.deck-grid.by-cost {
+  justify-content: flex-start;
+}
+
+.deck-cost-divider {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.deck-cost-divider::before,
+.deck-cost-divider::after {
+  content: "";
+  flex: 1;
+  border-top: 2px solid #4a4e8f;
+}
+
+.deck-cost-divider-label {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .deck-slot {

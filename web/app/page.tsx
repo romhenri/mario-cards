@@ -5,9 +5,6 @@ export default function HomePage() {
   return (
     <main className="page">
       <SiteTitle />
-      <p style={{ textAlign: "center" }}>
-        A tiny Hearthstone-style card game. Pick a mode:
-      </p>
       <ModeSelect />
     </main>
   );

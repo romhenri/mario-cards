@@ -15,6 +15,7 @@ export type CardId =
   | "spike"
   | "spike2"
   | "bowser-jr"
+  | "bowser"
   | "shy-guy"
   | "fly-guy"
   | "piranha-plant"
@@ -47,6 +48,13 @@ export type CardId =
   | "rocky-wrench"
   | "chomp"
   | "thwomp"
+  | "chargin-chuck"
+  | "piranha-creeper"
+  | "snow-pokey"
+  | "cat-bullet-bill"
+  | "bully"
+  | "blockstepper"
+  | "spiny-skipsqueak"
   | "daisy"
   | "peach"
   | "rosaline"
@@ -57,6 +65,10 @@ export type CardId =
   | "yoshi"
   | "donkey-kong"
   | "plessiee"
+  | "blue-yoshi"
+  | "red-yoshi"
+  | "yellow-yoshi"
+  | "diddy-kong"
   | "wario"
   | "waluigi";
 
@@ -74,12 +86,13 @@ export type CreatureType =
   | "ghost"
   | "chomp"
   | "insect"
-  | "bird"
+  | "animal"
   | "thwomp"
   | "princess"
   | "toad"
   | "hero"
-  | "dino";
+  | "dino"
+  | "kong";
 
 export interface CardDefinition {
   id: CardId;

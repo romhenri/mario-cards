@@ -78,7 +78,6 @@ export default function MultiplayerLobbyPage() {
           </button>
         </section>
         <div className="status-message">{error}</div>
-        <Link href="/">Back to home</Link>
       </div>
       {pending && (
         <DeckChooseModal

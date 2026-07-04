@@ -1168,6 +1168,76 @@ a {
   image-rendering: pixelated;
 }
 
+/* --- Challenge list (Play mode) --- */
+.challenge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(560px, 100%);
+  margin: 0 auto;
+}
+
+.challenge-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: #16213e;
+  border: 2px solid #4a4e8f;
+  border-radius: 12px;
+  color: #eaeaea;
+  text-decoration: none;
+}
+
+.challenge-card:hover {
+  border-color: #ffd700;
+}
+
+.challenge-card-art {
+  flex-shrink: 0;
+}
+
+.challenge-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.challenge-card-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.challenge-card-desc {
+  font-size: 12px;
+  color: #9aa0d0;
+}
+
+.challenge-card-deck {
+  font-size: 12px;
+  color: #9aa0d0;
+}
+
+.challenge-card-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.challenge-done {
+  font-size: 12px;
+  font-weight: bold;
+  color: #16213e;
+  background: #7dff8a;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
 /* --- Deck choose modal (match start) --- */
 .deck-choose {
   text-align: center;
@@ -1176,7 +1246,8 @@ a {
   border: 2px solid #ffd700;
   border-radius: 12px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-  max-width: 640px;
+  /* Wide enough for all 5 deck slots (104px each + 16px gaps) on one row */
+  max-width: min(700px, calc(100vw - 24px));
 }
 
 .deck-choose h2 {

@@ -1,48 +1,53 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { CARD_CATALOG } from "@mario-cards/shared";
 import { CardFace, cardStyle } from "../../components/board/CardFace";
+import { CardSortBar } from "../../components/cards/CardSortBar";
 import { Header } from "../../components/layout/Header";
-import { TYPE_ORDER, typeLabel } from "../../lib/cardTypes";
-
-const CARDS = Object.values(CARD_CATALOG).sort(
-  (a, b) =>
-    TYPE_ORDER.indexOf(a.creatureType) - TYPE_ORDER.indexOf(b.creatureType) ||
-    a.cost - b.cost ||
-    a.name.localeCompare(b.name)
-);
+import {
+  cardGroupLabel,
+  sortCards,
+  type CardSortMode,
+} from "../../lib/cardTypes";
 
 export default function AllCardsPage() {
+  const [sortMode, setSortMode] = useState<CardSortMode>("type");
   const [grouped, setGrouped] = useState(false);
+
+  const cards = useMemo(
+    () => sortCards(Object.values(CARD_CATALOG), sortMode),
+    [sortMode]
+  );
 
   return (
     <main className="page">
       <Header subtitle="All Cards" />
 
       <div className="deck-toolbar">
-        <span className="deck-count complete">{CARDS.length} cards</span>
-        <label className="check-option">
-          <input
-            type="checkbox"
-            checked={grouped}
-            onChange={(e) => setGrouped(e.target.checked)}
-          />
-          Grouped
-        </label>
+        <span className="deck-count complete">{cards.length} cards</span>
       </div>
 
+      <CardSortBar
+        sortMode={sortMode}
+        onSortMode={setSortMode}
+        grouped={grouped}
+        onGrouped={setGrouped}
+      />
+
       <div className="deck-grid cards-grid">
-        {CARDS.map((def, i) => {
-          const newType =
+        {cards.map((def, i) => {
+          const prev = i > 0 ? cards[i - 1] : null;
+          const newGroup =
             grouped &&
-            (i === 0 || CARDS[i - 1].creatureType !== def.creatureType);
+            (!prev ||
+              cardGroupLabel(prev, sortMode) !== cardGroupLabel(def, sortMode));
           return (
             <Fragment key={def.id}>
-              {newType && (
+              {newGroup && (
                 <div className="deck-cost-divider" role="separator">
                   <span className="deck-cost-divider-label">
-                    {typeLabel(def.creatureType)}
+                    {cardGroupLabel(def, sortMode)}
                   </span>
                 </div>
               )}

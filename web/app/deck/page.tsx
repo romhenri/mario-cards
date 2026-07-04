@@ -12,7 +12,12 @@ import {
   saveDeckSlot,
   type SavedDeck,
 } from "../../lib/deckStore";
-import { TYPE_ORDER, typeLabel } from "../../lib/cardTypes";
+import { CardSortBar } from "../../components/cards/CardSortBar";
+import {
+  cardGroupLabel,
+  sortCards,
+  type CardSortMode,
+} from "../../lib/cardTypes";
 
 type Counts = Partial<Record<CardId, number>>;
 
@@ -29,8 +34,6 @@ function toDeck(counts: Counts): CardId[] {
   }
   return deck;
 }
-
-type SortMode = "type" | "cost";
 
 const MAX_LEGEND_CARDS = 2;
 
@@ -59,7 +62,7 @@ export default function DeckPage() {
   const [cover, setCover] = useState<CardId | null>(null);
   const [dirty, setDirty] = useState(false);
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
-  const [sortMode, setSortMode] = useState<SortMode>("type");
+  const [sortMode, setSortMode] = useState<CardSortMode>("type");
   const [grouped, setGrouped] = useState(false);
 
   const loadSlotIntoEditor = (all: (SavedDeck | null)[], index: number) => {
@@ -89,18 +92,10 @@ export default function DeckPage() {
     loadSlotIntoEditor(slots, index);
   };
 
-  const cards = useMemo(() => {
-    const all = Object.values(CARD_CATALOG);
-    if (sortMode === "cost") {
-      return all.sort((a, b) => a.cost - b.cost || a.name.localeCompare(b.name));
-    }
-    return all.sort(
-      (a, b) =>
-        TYPE_ORDER.indexOf(a.creatureType) - TYPE_ORDER.indexOf(b.creatureType) ||
-        a.cost - b.cost ||
-        a.name.localeCompare(b.name)
-    );
-  }, [sortMode]);
+  const cards = useMemo(
+    () => sortCards(Object.values(CARD_CATALOG), sortMode),
+    [sortMode]
+  );
   const total = Object.values(counts).reduce((sum, n) => sum + (n ?? 0), 0);
   const complete = total === DECK_SIZE;
   const legendTotal = Object.entries(counts).reduce(
@@ -238,30 +233,12 @@ export default function DeckPage() {
         </button>
       </section>
 
-      <div className="deck-viewbar">
-        <div className="deck-sort" role="group" aria-label="Sort cards">
-          <button
-            className={`deck-sort-option ${sortMode === "type" ? "active" : ""}`}
-            onClick={() => setSortMode("type")}
-          >
-            By type
-          </button>
-          <button
-            className={`deck-sort-option ${sortMode === "cost" ? "active" : ""}`}
-            onClick={() => setSortMode("cost")}
-          >
-            By cost
-          </button>
-        </div>
-        <label className="check-option">
-          <input
-            type="checkbox"
-            checked={grouped}
-            onChange={(e) => setGrouped(e.target.checked)}
-          />
-          Grouped
-        </label>
-      </div>
+      <CardSortBar
+        sortMode={sortMode}
+        onSortMode={setSortMode}
+        grouped={grouped}
+        onGrouped={setGrouped}
+      />
       <p className="info-message">{savedMessage}</p>
 
       <div className="deck-grid">
@@ -270,17 +247,14 @@ export default function DeckPage() {
           const prev = i > 0 ? cards[i - 1] : null;
           const newGroup =
             grouped &&
-            (sortMode === "cost"
-              ? !prev || prev.cost !== def.cost
-              : !prev || prev.creatureType !== def.creatureType);
+            (!prev ||
+              cardGroupLabel(prev, sortMode) !== cardGroupLabel(def, sortMode));
           return (
             <Fragment key={def.id}>
             {newGroup && (
               <div className="deck-cost-divider" role="separator">
                 <span className="deck-cost-divider-label">
-                  {sortMode === "cost"
-                    ? `Cost ${def.cost}`
-                    : typeLabel(def.creatureType)}
+                  {cardGroupLabel(def, sortMode)}
                 </span>
               </div>
             )}

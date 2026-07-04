@@ -14,7 +14,6 @@ export default function ProfilePage() {
           alt="Piranha Plant"
         />
         <h2>Coming soon</h2>
-        <Link href="/">Back to menu</Link>
       </div>
     </main>
   );

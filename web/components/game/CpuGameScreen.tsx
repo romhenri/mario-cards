@@ -2,38 +2,62 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CardId } from "@mario-cards/shared";
 import { GameBoard } from "../board/GameBoard";
 import { DeckChooseModal } from "../deck/DeckChooseModal";
 import { Header } from "../layout/Header";
 import { useCpuGame } from "../../lib/cpuGameClient";
+import type { Challenge } from "../../lib/challenges";
+import { markChallengeCompleted } from "../../lib/challengeStore";
 
 interface CpuGameScreenProps {
-  /** Play mode opens the deck chooser; Quick Match skips straight into a
-   * random all-cards deck. */
-  chooseDeck: boolean;
+  /** Boss challenge: opens the deck chooser and pits the player against the
+   * boss's themed deck. Omitted for Quick Match, which jumps straight into
+   * random legend-free decks. */
+  challenge?: Challenge;
 }
 
-export function CpuGameScreen({ chooseDeck }: CpuGameScreenProps) {
+export function CpuGameScreen({ challenge }: CpuGameScreenProps) {
   const router = useRouter();
+  const chooseDeck = challenge !== undefined;
   // undefined = still choosing; null = random deck
   const [deck, setDeck] = useState<CardId[] | null | undefined>(
     chooseDeck ? undefined : null
   );
   // Quick Match (no deck chooser) keeps legend cards out of the random decks.
-  const { ui, handleAction, resetGame } = useCpuGame(deck, !chooseDeck);
+  const { ui, handleAction, resetGame } = useCpuGame(
+    deck,
+    !chooseDeck,
+    challenge?.deck ?? null
+  );
+
+  // Beating a boss marks its challenge as cleared.
+  const view = ui.view;
+  useEffect(() => {
+    if (
+      challenge &&
+      view &&
+      view.phase === "finished" &&
+      view.winnerPlayerId === view.you.playerId
+    ) {
+      markChallengeCompleted(challenge.id);
+    }
+  }, [challenge, view]);
 
   return (
     <main className="page">
       <Header small />
       {deck === undefined ? (
-        <DeckChooseModal onChoose={setDeck} onCancel={() => router.push("/")} />
+        <DeckChooseModal
+          onChoose={setDeck}
+          onCancel={() => router.push(chooseDeck ? "/play/cpu" : "/")}
+        />
       ) : ui.view ? (
         <GameBoard
           view={ui.view}
           youLabel="You"
-          opponentLabel="CPU"
+          opponentLabel={challenge ? challenge.name : "CPU"}
           statusMessage={ui.statusMessage}
           infoMessage={ui.infoMessage}
           onAction={handleAction}

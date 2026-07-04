@@ -5,13 +5,13 @@ import { CardView } from "./CardView";
 
 interface HandProps {
   cards: HandCard[];
-  manaCurrent: number;
+  coinsCurrent: number;
   /** Whether the local player may act right now (their turn, game running) */
   canAct: boolean;
   onPlayCard: (handInstanceId: string) => void;
 }
 
-export function Hand({ cards, manaCurrent, canAct, onPlayCard }: HandProps) {
+export function Hand({ cards, coinsCurrent, canAct, onPlayCard }: HandProps) {
   return (
     <div className="hand-row">
       {cards.length === 0 && <span className="info-message">(empty hand)</span>}
@@ -19,7 +19,7 @@ export function Hand({ cards, manaCurrent, canAct, onPlayCard }: HandProps) {
         <CardView
           key={card.instanceId}
           card={card}
-          playable={canAct && CARD_CATALOG[card.cardId].cost <= manaCurrent}
+          playable={canAct && CARD_CATALOG[card.cardId].cost <= coinsCurrent}
           onClick={() => onPlayCard(card.instanceId)}
         />
       ))}

@@ -5,13 +5,10 @@ import { STARTING_HP } from "@mario-cards/shared";
 interface PlayerHudProps {
   name: string;
   hp: number;
-  manaCurrent: number;
-  manaMax: number;
+  coinsCurrent: number;
+  coinsMax: number;
   handCount: number;
   isActive: boolean;
-  /** Shown as an attackable "face" button while an attacker is selected */
-  faceTargetable?: boolean;
-  onFaceClick?: () => void;
   /** Lets the board target this HUD for face-attack animations */
   rootRef?: React.Ref<HTMLDivElement>;
 }
@@ -19,12 +16,10 @@ interface PlayerHudProps {
 export function PlayerHud({
   name,
   hp,
-  manaCurrent,
-  manaMax,
+  coinsCurrent,
+  coinsMax,
   handCount,
   isActive,
-  faceTargetable = false,
-  onFaceClick,
   rootRef,
 }: PlayerHudProps) {
   const remaining = Math.max(0, Math.min(STARTING_HP, hp));
@@ -49,15 +44,10 @@ export function PlayerHud({
           <span key={i} className={`hp-seg ${i < remaining ? "filled" : "lost"}`} />
         ))}
       </span>
-      <span className="mana">
-        Mana: {manaCurrent}/{manaMax}
+      <span className="coins">
+        Coins: {coinsCurrent}/{coinsMax}
       </span>
       <span>Hand: {handCount}</span>
-      {faceTargetable && (
-        <button className="face-target" onClick={onFaceClick}>
-          Attack face
-        </button>
-      )}
     </div>
   );
 }

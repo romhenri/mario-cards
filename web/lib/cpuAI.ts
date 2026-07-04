@@ -2,6 +2,7 @@ import {
   attack,
   BOARD_LIMIT,
   CARD_CATALOG,
+  legalAttackTargets,
   playCard,
   type AttackTarget,
   type GameState,
@@ -23,10 +24,10 @@ export function decideCpuTurn(
   const me = () => sim.players.find((p) => p.playerId === cpuPlayerId)!;
   const opp = () => sim.players.find((p) => p.playerId !== cpuPlayerId)!;
 
-  // 1. Play cards: always the highest-cost card that fits the remaining mana.
+  // 1. Play cards: always the highest-cost card that fits the remaining coins.
   while (me().board.length < BOARD_LIMIT) {
     const playable = me()
-      .hand.filter((c) => CARD_CATALOG[c.cardId].cost <= me().manaCurrent)
+      .hand.filter((c) => CARD_CATALOG[c.cardId].cost <= me().coinsCurrent)
       // Stable sort: ties keep hand order.
       .sort((a, b) => CARD_CATALOG[b.cardId].cost - CARD_CATALOG[a.cardId].cost);
     if (playable.length === 0) break;
@@ -39,26 +40,45 @@ export function decideCpuTurn(
   }
 
   // 2. Attack with every eligible creature, in board order.
+  const skipped = new Set<string>();
   for (;;) {
     const attacker = me().board.find(
       (c) =>
-        !c.hasSummoningSickness && !c.hasAttackedThisTurn && c.currentAttack > 0
+        !c.hasSummoningSickness &&
+        !c.hasAttackedThisTurn &&
+        c.currentAttack > 0 &&
+        !skipped.has(c.instanceId)
     );
     if (!attacker) break;
 
-    // Favorable trade: we kill it and survive the counter-attack.
-    const trades = opp()
-      .board.filter(
+    const legal = legalAttackTargets(attacker, opp().board);
+
+    // Favorable trade: we kill it and survive the counter-attack
+    // (a shielded target won't die to this hit, so it never trades favorably).
+    const trades = legal.creatures
+      .filter(
         (t) =>
+          !t.shieldActive &&
           attacker.currentAttack >= t.currentHealth &&
-          attacker.currentHealth > t.currentAttack
+          (attacker.shieldActive || attacker.currentHealth > t.currentAttack)
       )
       .sort((a, b) => a.currentHealth - b.currentHealth);
 
-    const target: AttackTarget =
-      trades.length > 0
-        ? { type: "creature", creatureInstanceId: trades[0].instanceId }
-        : { type: "face" };
+    let target: AttackTarget;
+    if (trades.length > 0) {
+      target = { type: "creature", creatureInstanceId: trades[0].instanceId };
+    } else if (legal.face) {
+      target = { type: "face" };
+    } else if (legal.creatures.length > 0) {
+      // Taunt is blocking: chip the weakest one down.
+      const weakest = [...legal.creatures].sort(
+        (a, b) => a.currentHealth - b.currentHealth
+      )[0];
+      target = { type: "creature", creatureInstanceId: weakest.instanceId };
+    } else {
+      skipped.add(attacker.instanceId);
+      continue;
+    }
 
     const result = attack(sim, cpuPlayerId, attacker.instanceId, target);
     if (result.error) break;

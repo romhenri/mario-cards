@@ -40,6 +40,8 @@ export function CreatureSlot({
       classes.push("exhausted");
     }
   }
+  if (creature.shieldActive) classes.push("shielded");
+  if (creature.stealthed) classes.push("stealthed");
 
   const clickable = !dying && (canAttack || targetable);
   return (
@@ -54,6 +56,7 @@ export function CreatureSlot({
         def={def}
         attack={creature.currentAttack}
         health={creature.currentHealth}
+        shieldActive={creature.shieldActive}
       />
     </button>
   );

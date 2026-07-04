@@ -17,7 +17,7 @@ export function CardView({ card, playable, onClick }: CardViewProps) {
       style={cardStyle(def)}
       onClick={onClick}
       disabled={!playable}
-      title={playable ? `Play ${def.name}` : "Not enough mana (or not your turn)"}
+      title={playable ? `Play ${def.name}` : "Not enough coins (or not your turn)"}
     >
       <CardFace def={def} attack={def.attack} health={def.health} showCost />
     </button>

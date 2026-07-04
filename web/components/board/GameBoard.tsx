@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type {
-  BoardCreature,
-  ClientGameState,
-  PlayerAction,
+import {
+  legalAttackTargets,
+  type BoardCreature,
+  type ClientGameState,
+  type PlayerAction,
 } from "@mario-cards/shared";
 import {
   playGameOver,
@@ -24,7 +25,7 @@ interface GameBoardProps {
   view: ClientGameState;
   youLabel: string;
   opponentLabel: string;
-  /** Error/rejection feedback, e.g. "Not enough mana" */
+  /** Error/rejection feedback, e.g. "Not enough coins" */
   statusMessage: string | null;
   /** Neutral info, e.g. "CPU is thinking..." */
   infoMessage: string | null;
@@ -271,17 +272,25 @@ export function GameBoard({
   const oppRow = withGhosts(view.opponent.board, ghostsOpp);
   const youRow = withGhosts(view.you.board, ghostsYou);
 
+  // Keyword rules (taunt/fly/reach) restrict what the selected attacker may hit.
+  const selectedAttacker = selectedAttackerId
+    ? view.you.board.find((c) => c.instanceId === selectedAttackerId) ?? null
+    : null;
+  const legal = selectedAttacker
+    ? legalAttackTargets(selectedAttacker, view.opponent.board)
+    : null;
+  const isLegalCreatureTarget = (instanceId: string) =>
+    !!legal && legal.creatures.some((c) => c.instanceId === instanceId);
+
   return (
     <div className="game-board">
       <PlayerHud
         name={opponentLabel}
         hp={view.opponent.hp}
-        manaCurrent={view.opponent.manaCurrent}
-        manaMax={view.opponent.manaMax}
+        coinsCurrent={view.opponent.coinsCurrent}
+        coinsMax={view.opponent.coinsMax}
         handCount={view.opponent.handCount}
         isActive={!view.yourTurn && view.phase === "playing"}
-        faceTargetable={selectedAttackerId !== null}
-        onFaceClick={handleFaceClick}
         rootRef={oppHudRef}
       />
 
@@ -292,7 +301,7 @@ export function GameBoard({
             creature={creature}
             canAttack={false}
             selected={false}
-            targetable={!dying && selectedAttackerId !== null}
+            targetable={!dying && isLegalCreatureTarget(creature.instanceId)}
             dying={dying}
             onClick={() => handleEnemyCreatureClick(creature.instanceId)}
             slotRef={registerSlot(creature.instanceId)}
@@ -300,7 +309,28 @@ export function GameBoard({
         ))}
       </div>
 
-      <div className="divider" />
+      <div className="divider">
+        <div className="frontier-box">
+          {(legal?.face ?? false) && (
+            <button
+              className="face-target attack-face frontier-side left"
+              onClick={handleFaceClick}
+            >
+              Attack face
+            </button>
+          )}
+          <span className="turn-count">Round {view.turnNumber}</span>
+          <EndTurnButton enabled={canAct} onEndTurn={handleEndTurn} />
+          {selectedAttackerId !== null && (
+            <button
+              className="face-target frontier-side right"
+              onClick={() => setSelectedAttackerId(null)}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      </div>
 
       <div className={`board-row ${youRow.length === 0 ? "empty" : ""}`}>
         {youRow.map(({ creature, dying }) => (
@@ -320,8 +350,8 @@ export function GameBoard({
       <PlayerHud
         name={youLabel}
         hp={view.you.hp}
-        manaCurrent={view.you.manaCurrent}
-        manaMax={view.you.manaMax}
+        coinsCurrent={view.you.coinsCurrent}
+        coinsMax={view.you.coinsMax}
         handCount={view.you.hand.length}
         isActive={canAct}
         rootRef={youHudRef}
@@ -329,21 +359,14 @@ export function GameBoard({
 
       <Hand
         cards={view.you.hand}
-        manaCurrent={view.you.manaCurrent}
+        coinsCurrent={view.you.coinsCurrent}
         canAct={canAct}
         onPlayCard={handlePlayCard}
       />
 
       <div className="controls-row">
-        <EndTurnButton enabled={canAct} onEndTurn={handleEndTurn} />
-        <TargetPrompt
-          visible={selectedAttackerId !== null}
-          onCancel={() => setSelectedAttackerId(null)}
-        />
-        <span className="info-message">
-          Turn {view.turnNumber}
-          {infoMessage ? ` — ${infoMessage}` : ""}
-        </span>
+        <TargetPrompt visible={selectedAttackerId !== null} />
+        {infoMessage && <span className="info-message">{infoMessage}</span>}
       </div>
 
       <div className="status-message">{statusMessage}</div>

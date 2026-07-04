@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useReducer, useRef } from "react";
 import type { ClientGameState } from "@mario-cards/shared";
 import { GameBoard } from "../../../../components/board/GameBoard";
-import { SiteTitle } from "../../../../components/layout/SiteTitle";
+import { Header } from "../../../../components/layout/Header";
 import {
   gameUiReducer,
   initialGameUiState,
@@ -80,7 +80,7 @@ export default function MultiplayerRoomPage() {
 
   return (
     <main className="page">
-      <SiteTitle small subtitle="Multiplayer" />
+      <Header small subtitle="Multiplayer" backHref="/play/multiplayer" />
       {ui.view ? (
         <GameBoard
           view={ui.view}

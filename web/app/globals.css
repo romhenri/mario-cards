@@ -27,18 +27,45 @@ button:disabled {
   padding: 24px 16px;
 }
 
+/* --- Header ---
+   Three columns keep the logo centered regardless of the back button:
+   back pill on the left, logo in the middle, empty balance on the right. */
+.site-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin: 8px 0 24px;
+}
+
+.site-header .header-back {
+  grid-column: 1;
+  justify-self: start;
+  text-decoration: none;
+  --pill-border: #4a4e8f;
+}
+
+.header-back-label {
+  font-size: 13px;
+}
+
 .title {
+  grid-column: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   text-align: center;
-  margin: 8px 0 24px;
+  margin: 0;
 }
 
 .site-logo {
   height: 90px;
   width: auto;
+}
+
+/* Off the home page the logo shrinks to leave room for content */
+.site-header:not(.home) .site-logo {
+  height: 56px;
 }
 
 .title .subtitle {
@@ -48,18 +75,24 @@ button:disabled {
   text-transform: uppercase;
 }
 
-/* Compact title for in-game pages */
-.title.small {
-  font-size: 14px;
+/* Compact header for in-game pages */
+.site-header.small {
   margin: 4px 0 10px;
-  color: #9aa0d0;
 }
 
-.title.small .site-logo {
+.site-header.small .site-logo {
   height: 40px;
 }
 
-.title.small .subtitle {
+.site-header.small .subtitle {
+  font-size: 12px;
+}
+
+.site-header.small .header-back {
+  padding: 6px 12px;
+}
+
+.site-header.small .header-back-label {
   font-size: 12px;
 }
 
@@ -89,9 +122,9 @@ button:disabled {
    Chunky tile menu; colors match the card colorType palette. */
 .home-menu {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  max-width: 480px;
+  max-width: 520px;
   margin: 40px auto 24px;
 }
 
@@ -122,12 +155,6 @@ button:disabled {
   box-shadow: 0 2px 0 var(--tile-border), 0 6px 12px rgba(0, 0, 0, 0.35);
 }
 
-.menu-tile.wide {
-  grid-column: 1 / -1;
-  aspect-ratio: auto;
-  padding: 20px;
-}
-
 .menu-tile.green {
   --tile-bg: #2e7d32;
   --tile-border: #1e5121;
@@ -136,6 +163,11 @@ button:disabled {
 .menu-tile.red {
   --tile-bg: #c62828;
   --tile-border: #811a1a;
+}
+
+.menu-tile.yellow {
+  --tile-bg: #ffd93b;
+  --tile-border: #c29a06;
 }
 
 .menu-tile.blue {
@@ -149,7 +181,7 @@ button:disabled {
 }
 
 .menu-tile-label {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -162,18 +194,109 @@ button:disabled {
   opacity: 0.85;
 }
 
+/* Secondary nav under the tiles: dark rounded pills with a colored
+   border and a creature icon on the left. */
+.home-nav {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--pill-border);
+  background: #23264a;
+  color: #eaeaea;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.nav-pill:hover {
+  transform: translateY(-2px);
+  background: #2b2f5c;
+}
+
+.nav-pill:active {
+  transform: translateY(1px);
+}
+
+.nav-pill.yellow {
+  --pill-border: #c29a06;
+}
+
+.nav-pill.blue {
+  --pill-border: #1565c0;
+}
+
+.nav-pill.green {
+  --pill-border: #2e7d32;
+}
+
+.nav-pill-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
 @media (max-width: 420px) {
   .home-menu {
     gap: 12px;
   }
 
   .menu-tile-label {
-    font-size: 16px;
+    font-size: 13px;
+  }
+
+  .menu-tile-sub {
+    font-size: 10px;
+    letter-spacing: 1px;
   }
 
   .menu-tile-icon {
     font-size: 34px;
   }
+
+  .home-nav {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Profile placeholder --- */
+.profile-placeholder {
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 32px 24px;
+  text-align: center;
+  background: #23264a;
+  border: 2px solid #4a4e8f;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-placeholder-icon {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.profile-placeholder h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 /* --- Game board layout --- */
@@ -702,17 +825,85 @@ a {
 }
 
 /* --- Deck builder --- */
-.deck-hint {
-  text-align: center;
-  color: #9aa0d0;
-}
-
 .deck-toolbar {
   display: flex;
   gap: 16px;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+/* Marked block holding everything about the deck being built:
+   cover icon, name, count and save/clear. View options live below it. */
+.deck-editor-panel {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  background: #23264a;
+  border: 2px solid #4a4e8f;
+  border-radius: 14px;
+}
+
+.deck-viewbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+/* Dark pill checkbox used on view toolbars (e.g. "Grouped" on All Cards) */
+.check-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  background: #16213e;
+  color: #eaeaea;
+  border: 2px solid #4a4e8f;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.check-option:hover {
+  border-color: #ffd700;
+}
+
+/* Custom box: the native checkbox renders a white square that clashes
+   with the dark theme. */
+.check-option input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 2px solid #4a4e8f;
+  border-radius: 4px;
+  background: #0f1530;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.check-option input:checked {
+  background: #ffd700;
+  border-color: #ffd700;
+}
+
+.check-option input:checked::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  background: #16213e;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
 .deck-count {
@@ -765,25 +956,32 @@ a {
 }
 
 .deck-sort-option.active {
-  background: #0f3460;
-  color: #ffd700;
+  background: #ffd700;
+  color: #16213e;
+  font-weight: 700;
 }
 
+.deck-sort-option.active:hover {
+  color: #16213e;
+}
+
+/* Fixed-width tracks centered as a block: toggling "Grouped" only inserts
+   the full-row dividers, so cards keep the exact same start position. */
 .deck-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--grid-track, 136px));
   gap: 12px;
-  flex-wrap: wrap;
   justify-content: center;
   margin-top: 16px;
 }
 
-/* Cost view aligns each tier's row to the left, under its divider */
-.deck-grid.by-cost {
-  justify-content: flex-start;
+/* All Cards page: bare cards (no slot padding), narrower track */
+.cards-grid {
+  --grid-track: 120px;
 }
 
 .deck-cost-divider {
-  flex-basis: 100%;
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -845,5 +1043,149 @@ a {
 
 .deck-minus:hover:not(:disabled),
 .deck-plus:hover:not(:disabled) {
+  border-color: #ffd700;
+}
+
+.deck-cover {
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+  background: #0f3460;
+  color: #9aa0d0;
+  border: 2px solid #4a4e8f;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.deck-cover:hover:not(:disabled) {
+  border-color: #ffd700;
+}
+
+.deck-cover.active {
+  color: #ffd700;
+  border-color: #ffd700;
+}
+
+.deck-name-input {
+  padding: 8px 12px;
+  width: 160px;
+  font-family: inherit;
+  font-size: 14px;
+  background: #0f3460;
+  border: 2px solid #4a4e8f;
+  border-radius: 8px;
+  color: #eaeaea;
+}
+
+.deck-name-input:focus {
+  outline: none;
+  border-color: #ffd700;
+}
+
+/* --- Deck slots (the 5 saved decks) --- */
+.deck-slots-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 16px 0 24px;
+}
+
+.deck-slot-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 104px;
+  padding: 10px 8px;
+  background: #16213e;
+  border: 2px solid #4a4e8f;
+  border-radius: 10px;
+  color: #eaeaea;
+}
+
+.deck-slot-card:hover:not(:disabled) {
+  border-color: #ffd700;
+}
+
+.deck-slot-card.selected {
+  border-color: #ffd700;
+  background: #0f3460;
+}
+
+.deck-slot-card:disabled {
+  opacity: 0.55;
+}
+
+.deck-slot-card-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #9aa0d0;
+}
+
+.deck-slot-card-art-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #0f3460;
+  border: 2px solid var(--card-border, #4a4e8f);
+  font-size: 24px;
+  color: #4a4e8f;
+  overflow: hidden;
+}
+
+.deck-slot-card-art {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.deck-slot-card-name {
+  font-size: 12px;
+  font-weight: bold;
+  max-width: 92px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Deck choose modal (match start) --- */
+.deck-choose {
+  text-align: center;
+  padding: 24px 32px;
+  background: #16213e;
+  border: 2px solid #ffd700;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  max-width: 640px;
+}
+
+.deck-choose h2 {
+  margin: 0 0 8px;
+}
+
+.deck-choose-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.deck-choose-random,
+.deck-choose-cancel {
+  padding: 10px 16px;
+  font-size: 14px;
+  background: #0f3460;
+  color: #eaeaea;
+  border: 2px solid #4a4e8f;
+  border-radius: 8px;
+}
+
+.deck-choose-random:hover,
+.deck-choose-cancel:hover {
   border-color: #ffd700;
 }

@@ -7,12 +7,12 @@ import {
   endTurn,
   playCard,
   toClientState,
+  type CardId,
   type EngineResult,
   type GameState,
   type PlayerAction,
 } from "@mario-cards/shared";
 import { decideCpuTurn } from "./cpuAI";
-import { loadDeck } from "./deckStore";
 import { playTransitionSounds } from "./sounds";
 import {
   gameUiReducer,
@@ -51,7 +51,9 @@ export interface CpuGame {
   resetGame: () => void;
 }
 
-export function useCpuGame(): CpuGame {
+/** `deck` is the human's chosen deck (null = random). While it is still
+ * `undefined` (deck-choose modal open) the game does not start. */
+export function useCpuGame(deck: CardId[] | null | undefined): CpuGame {
   const [ui, dispatch] = useReducer(gameUiReducer, initialGameUiState);
   const stateRef = useRef<GameState | null>(null);
   const cpuRunningRef = useRef(false);
@@ -101,20 +103,22 @@ export function useCpuGame(): CpuGame {
   }, [publish]);
 
   const resetGame = useCallback(() => {
-    // Human uses the deck built on /deck (if any); the CPU gets a random one.
+    // Human uses the deck chosen at match start (if any); the CPU gets a
+    // random one.
     const state = createGame(HUMAN_PLAYER_ID, CPU_PLAYER_ID, undefined, [
-      loadDeck(),
+      deck ?? null,
       null,
     ]);
     publish(state);
     if (state.activePlayerIndex === CPU_INDEX) void runCpuTurn();
-  }, [publish, runCpuTurn]);
+  }, [deck, publish, runCpuTurn]);
 
   useEffect(() => {
+    if (deck === undefined) return; // still choosing a deck
     if (startedRef.current) return; // survive React StrictMode double-mount
     startedRef.current = true;
     resetGame();
-  }, [resetGame]);
+  }, [deck, resetGame]);
 
   const handleAction = useCallback(
     (action: PlayerAction) => {

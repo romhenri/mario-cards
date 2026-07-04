@@ -1,21 +1,77 @@
 import { DECK_SIZE, type CardId } from "@mario-cards/shared";
 
+/** Which tab a challenge lives in: as the Hero you face villain decks,
+ * as the Villain you face hero decks. */
+export type ChallengeSide = "hero" | "villain";
+
 /** A boss battle: the CPU plays a fixed themed deck fronted by its boss. */
 export interface Challenge {
   id: string;
   name: string;
   boss: CardId;
   description: string;
+  side: ChallengeSide;
   deck: CardId[];
 }
 
 /** Themed 16-card boss decks (2-legend max, like player decks). */
 export const CHALLENGES: Challenge[] = [
   {
+    id: "goombas",
+    name: "Goombas",
+    boss: "grand-goomba",
+    description: "The goomba stampede: no legends, all teeth.",
+    side: "hero",
+    deck: [
+      "goomba",
+      "goomba",
+      "goomba",
+      "paragoomba",
+      "paragoomba",
+      "gloomba",
+      "gloomba",
+      "Galoomba",
+      "Galoomba",
+      "winged-Galoomba",
+      "winged-Galoomba",
+      "cat-goomba",
+      "cat-goomba",
+      "grand-goomba",
+      "grand-goomba",
+      "grand-Galoomba",
+    ],
+  },
+  {
+    id: "koopas",
+    name: "Koopas",
+    boss: "koopa-troopa",
+    description: "Shells and spikes: the koopa troop, no legends.",
+    side: "hero",
+    deck: [
+      "koopa-troopa",
+      "koopa-troopa",
+      "koopa-troopa",
+      "koopa-paratroopa",
+      "koopa-paratroopa",
+      "dry-bones",
+      "dry-bones",
+      "paradrybones",
+      "spike",
+      "spike",
+      "spike2",
+      "spike2",
+      "lakitu",
+      "lakitu",
+      "chargin-chuck",
+      "chargin-chuck",
+    ],
+  },
+  {
     id: "king-bob-omb",
     name: "King Bob-omb",
     boss: "king-bob-omb",
     description: "Explosives royalty: bombs and every kind of bullet.",
+    side: "hero",
     deck: [
       "king-bob-omb",
       "bob-omb",
@@ -40,6 +96,7 @@ export const CHALLENGES: Challenge[] = [
     name: "King Boo",
     boss: "king-boo",
     description: "Haunted house: boos and the undead crew.",
+    side: "hero",
     deck: [
       "king-boo",
       "boo",
@@ -64,6 +121,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Bowser Jr.",
     boss: "bowser-jr",
     description: "The koopa army, with Magikoopa as the second legend.",
+    side: "hero",
     deck: [
       "bowser-jr",
       "magikoopa",
@@ -83,7 +141,143 @@ export const CHALLENGES: Challenge[] = [
       "lakitu",
     ],
   },
+  {
+    id: "toad",
+    name: "Toad",
+    boss: "blue-toad",
+    description: "The toad patrol: every color, no legends.",
+    side: "villain",
+    deck: [
+      "blue-toad",
+      "blue-toad",
+      "blue-toad",
+      "blue-toad",
+      "purple-toad",
+      "purple-toad",
+      "purple-toad",
+      "purple-toad",
+      "red-toad",
+      "red-toad",
+      "red-toad",
+      "red-toad",
+      "yellow-toad",
+      "yellow-toad",
+      "yellow-toad",
+      "yellow-toad",
+    ],
+  },
+  {
+    id: "captain-toad",
+    name: "Captain Toad",
+    boss: "captain-toad",
+    description: "The Toad Brigade on expedition.",
+    side: "villain",
+    deck: [
+      "captain-toad",
+      "yellow-toad",
+      "blue-toad",
+      "blue-toad",
+      "blue-toad",
+      "blue-toad",
+      "purple-toad",
+      "purple-toad",
+      "purple-toad",
+      "red-toad",
+      "red-toad",
+      "red-toad",
+      "red-toad",
+      "yellow-toad",
+      "yellow-toad",
+      "yellow-toad",
+    ],
+  },
+  {
+    id: "plessie",
+    name: "Plessie",
+    boss: "plessiee",
+    description: "River rapids: Plessie and the whole fish crew.",
+    side: "villain",
+    deck: [
+      "plessiee",
+      "cheep-cheep",
+      "cheep-cheep",
+      "cheep-cheep",
+      "cheep-cheep",
+      "blooper",
+      "blooper",
+      "blooper",
+      "blooper",
+      "blooper",
+      "splounder",
+      "splounder",
+      "splounder",
+      "splounder",
+      "splounder",
+      "splounder",
+    ],
+  },
+  {
+    id: "toadette",
+    name: "Toadette",
+    boss: "toadette",
+    description: "Mushroom royalty: Toadette with Toad at her side.",
+    side: "villain",
+    deck: [
+      "toadette",
+      "toad",
+      "blue-toad",
+      "blue-toad",
+      "blue-toad",
+      "blue-toad",
+      "purple-toad",
+      "purple-toad",
+      "purple-toad",
+      "red-toad",
+      "red-toad",
+      "red-toad",
+      "red-toad",
+      "yellow-toad",
+      "yellow-toad",
+      "yellow-toad",
+    ],
+  },
+  {
+    id: "mario-brothers",
+    name: "Mario Brothers",
+    boss: "mario",
+    description: "Mario and Luigi with the Mushroom Kingdom crew.",
+    side: "villain",
+    deck: [
+      "mario",
+      "luigi",
+      "red-toad",
+      "red-toad",
+      "blue-toad",
+      "blue-toad",
+      "yellow-toad",
+      "yellow-toad",
+      "purple-toad",
+      "koopa-troopa",
+      "koopa-troopa",
+      "dry-bones",
+      "goomba",
+      "goomba",
+      "Galoomba",
+      "Galoomba",
+    ],
+  },
 ];
+
+/** Challenge decks double as playable decks. The first challenge of each
+ * side is unlocked from the start; every other deck unlocks by beating
+ * its challenge — win them all to own them all. */
+export function isChallengeDeckUnlocked(
+  challenge: Challenge,
+  done: Record<string, boolean>
+): boolean {
+  if (done[challenge.id]) return true;
+  return CHALLENGES.find((c) => c.side === challenge.side)?.id === challenge.id;
+}
 
 for (const challenge of CHALLENGES) {
   if (challenge.deck.length !== DECK_SIZE) {

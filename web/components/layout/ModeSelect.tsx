@@ -18,7 +18,7 @@ export function ModeSelect() {
       </button>
       <button
         className="menu-tile blue"
-        onClick={() => router.push("/play/cpu")}
+        onClick={() => router.push("/play/challenge")}
       >
         <span className="menu-tile-icon"></span>
         <span className="menu-tile-label">Play</span>

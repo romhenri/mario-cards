@@ -10,6 +10,7 @@ import { Header } from "../layout/Header";
 import { useCpuGame } from "../../lib/cpuGameClient";
 import type { Challenge } from "../../lib/challenges";
 import { markChallengeCompleted } from "../../lib/challengeStore";
+import { useRecordMatchResult } from "../../lib/statsStore";
 
 interface CpuGameScreenProps {
   /** Boss challenge: opens the deck chooser and pits the player against the
@@ -34,6 +35,7 @@ export function CpuGameScreen({ challenge }: CpuGameScreenProps) {
 
   // Beating a boss marks its challenge as cleared.
   const view = ui.view;
+  useRecordMatchResult(view);
   useEffect(() => {
     if (
       challenge &&
@@ -51,7 +53,7 @@ export function CpuGameScreen({ challenge }: CpuGameScreenProps) {
       {deck === undefined ? (
         <DeckChooseModal
           onChoose={setDeck}
-          onCancel={() => router.push(chooseDeck ? "/play/cpu" : "/")}
+          onCancel={() => router.push(chooseDeck ? "/play/challenge" : "/")}
         />
       ) : ui.view ? (
         <GameBoard

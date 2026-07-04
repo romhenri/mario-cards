@@ -11,6 +11,7 @@ import {
   initialGameUiState,
 } from "../../../../lib/gameStateStore";
 import { playTransitionSounds } from "../../../../lib/sounds";
+import { useRecordMatchResult } from "../../../../lib/statsStore";
 import { getWsClient, type ServerMessage } from "../../../../lib/wsClient";
 
 export default function MultiplayerRoomPage() {
@@ -18,6 +19,7 @@ export default function MultiplayerRoomPage() {
   const roomId = String(params.roomId ?? "").toUpperCase();
   const router = useRouter();
   const [ui, dispatch] = useReducer(gameUiReducer, initialGameUiState);
+  useRecordMatchResult(ui.view);
   const joinAttemptedRef = useRef(false);
   const lastViewRef = useRef<ClientGameState | null>(null);
 

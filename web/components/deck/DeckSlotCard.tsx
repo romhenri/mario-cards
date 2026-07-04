@@ -6,9 +6,12 @@ import type { SavedDeck } from "../../lib/deckStore";
 
 interface DeckSlotCardProps {
   deck: SavedDeck | null;
-  label: string;
+  /** Slot caption above the art (deck builder only); omit to hide it. */
+  label?: string;
   selected?: boolean;
   disabled?: boolean;
+  /** Renders the card darkened with a lock icon (unearned challenge deck). */
+  locked?: boolean;
   onClick?: () => void;
 }
 
@@ -32,40 +35,51 @@ export function DeckSlotCard({
   label,
   selected = false,
   disabled = false,
+  locked = false,
   onClick,
 }: DeckSlotCardProps) {
   const cover = deck ? CARD_CATALOG[deck.cover] : null;
-  const badge = deckBadge(deck);
+  const badge = locked
+    ? { src: "/icons/lock.png", alt: "Locked deck" }
+    : deckBadge(deck);
   return (
     <button
       className={`deck-slot-card ${selected ? "selected" : ""} ${
         deck ? "" : "empty"
-      }`}
+      } ${locked ? "locked" : ""}`}
       onClick={onClick}
       disabled={disabled}
-      title={deck ? deck.name : `${label} (empty)`}
+      title={
+        locked
+          ? `${deck?.name ?? "Deck"} (locked: beat its challenge to unlock)`
+          : deck
+            ? deck.name
+            : `${label ?? "Slot"} (empty)`
+      }
     >
-      <span className="deck-slot-card-label">{label}</span>
-      {cover ? (
-        <span className="deck-slot-card-art-box" style={cardStyle(cover)}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="deck-slot-card-art"
-            src={cover.image}
-            alt={cover.name}
-            draggable={false}
-          />
-        </span>
-      ) : (
-        <span className="deck-slot-card-art-box">?</span>
-      )}
-      <span className="deck-slot-card-name">{deck ? deck.name : "Empty"}</span>
-      <span className="deck-slot-card-badge">
+      {label && <span className="deck-slot-card-label">{label}</span>}
+      <span className="deck-slot-card-art-wrap">
+        {cover ? (
+          <span className="deck-slot-card-art-box" style={cardStyle(cover)}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="deck-slot-card-art"
+              src={cover.image}
+              alt={cover.name}
+              draggable={false}
+            />
+          </span>
+        ) : (
+          <span className="deck-slot-card-art-box">?</span>
+        )}
         {badge && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={badge.src} alt={badge.alt} draggable={false} />
+          <span className="deck-slot-card-badge">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={badge.src} alt={badge.alt} draggable={false} />
+          </span>
         )}
       </span>
+      <span className="deck-slot-card-name">{deck ? deck.name : "Empty"}</span>
     </button>
   );
 }

@@ -271,32 +271,108 @@ button:disabled {
 }
 
 /* --- Profile placeholder --- */
-.profile-placeholder {
-  max-width: 420px;
-  margin: 40px auto;
-  padding: 32px 24px;
-  text-align: center;
+.profile-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: min(640px, 100%);
+  margin: 0 auto;
+}
+
+.profile-section {
+  padding: 18px 24px;
   background: #23264a;
   border: 2px solid #4a4e8f;
   border-radius: 16px;
+}
+
+.profile-section h3 {
+  margin: 0 0 14px;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #9aa0d0;
+  text-align: center;
+}
+
+.profile-stats-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.profile-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
+  min-width: 96px;
+  padding: 12px 18px;
+  background: #16213e;
+  border: 2px solid #4a4e8f;
+  border-radius: 10px;
 }
 
-.profile-placeholder-icon {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-  image-rendering: pixelated;
+.profile-stat-value {
+  font-size: 26px;
+  font-weight: bold;
+  color: #ffd700;
 }
 
-.profile-placeholder h2 {
-  margin: 0;
-  font-size: 20px;
-  letter-spacing: 1px;
+.profile-stat-value.won {
+  color: #7dff8a;
+}
+
+.profile-stat-value.lost {
+  color: #ff8a9a;
+}
+
+.profile-stat-label {
+  font-size: 12px;
+  color: #9aa0d0;
   text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.profile-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-progress + .profile-progress {
+  margin-top: 10px;
+}
+
+.profile-progress-label {
+  width: 60px;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.profile-progress-track {
+  flex: 1;
+  height: 12px;
+  background: #0f1530;
+  border: 2px solid #4a4e8f;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.profile-progress-fill {
+  display: block;
+  height: 100%;
+  background: #ffd700;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.profile-progress-value {
+  width: 90px;
+  font-size: 12px;
+  color: #9aa0d0;
 }
 
 /* --- Game board layout --- */
@@ -1117,6 +1193,21 @@ a {
   opacity: 0.55;
 }
 
+/* Locked challenge decks: darkened until their challenge is beaten */
+.deck-slot-card.locked {
+  opacity: 0.45;
+  filter: grayscale(0.6) brightness(0.8);
+}
+
+.deck-group-label {
+  margin: 4px 0 10px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #9aa0d0;
+  text-align: center;
+}
+
 .deck-slot-card-label {
   font-size: 11px;
   text-transform: uppercase;
@@ -1153,22 +1244,32 @@ a {
   white-space: nowrap;
 }
 
-/* Status badge under the slot: star (legend deck), mushroom (standard
-   deck) or nothing (empty slot); the row keeps its height either way. */
+/* Status badge pinned to the art's bottom-right corner: star (legend
+   deck), mushroom (standard deck), lock (locked) or nothing (empty). */
+.deck-slot-card-art-wrap {
+  position: relative;
+}
+
 .deck-slot-card-badge {
+  position: absolute;
+  right: -5px;
+  bottom: -3px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 18px;
 }
 
 .deck-slot-card-badge img {
   width: 18px;
   height: 18px;
   image-rendering: pixelated;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7));
 }
 
 /* --- Challenge list (Play mode) --- */
+.challenge-tabs {
+  width: fit-content;
+  margin: 0 auto 16px;
+}
+
 .challenge-list {
   display: flex;
   flex-direction: column;
@@ -1191,6 +1292,11 @@ a {
 
 .challenge-card:hover {
   border-color: #ffd700;
+}
+
+/* Completed challenges: green border + green trophy icon */
+.challenge-card.done {
+  border-color: #4caf50;
 }
 
 .challenge-card-art {
@@ -1230,12 +1336,14 @@ a {
 }
 
 .challenge-done {
-  font-size: 12px;
-  font-weight: bold;
-  color: #16213e;
-  background: #7dff8a;
-  padding: 2px 8px;
-  border-radius: 999px;
+  display: flex;
+  align-items: center;
+}
+
+.challenge-done img {
+  width: 22px;
+  height: 22px;
+  image-rendering: pixelated;
 }
 
 /* --- Deck choose modal (match start) --- */

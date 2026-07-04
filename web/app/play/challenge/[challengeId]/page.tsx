@@ -16,7 +16,7 @@ export default function ChallengeGamePage() {
       <main className="page">
         <Header subtitle="Challenges" />
         <p className="info-message">
-          Unknown challenge. <Link href="/play/cpu">Back to challenges</Link>
+          Unknown challenge. <Link href="/play/challenge">Back to challenges</Link>
         </p>
       </main>
     );

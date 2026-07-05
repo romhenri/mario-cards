@@ -11,6 +11,7 @@ import { sortCards } from "../../lib/cardTypes";
 const GAMES: { game: CardGame; label: string }[] = [
   { game: "Galaxy", label: "Galaxy" },
   { game: "3DWorld", label: "3D World" },
+  { game: "BowersFury", label: "Bowser's Fury" },
 ];
 
 const COLLECTIONS = GAMES.map(({ game, label }) => ({

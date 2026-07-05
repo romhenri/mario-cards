@@ -9,14 +9,14 @@ import { CHALLENGES, type ChallengeSide } from "../../../lib/challenges";
 import { loadCompletedChallenges } from "../../../lib/challengeStore";
 
 const TABS: { side: ChallengeSide; label: string }[] = [
-  { side: "hero", label: "Hero" },
-  { side: "villain", label: "Villain" },
+  { side: "villains", label: "Villains" },
+  { side: "heroes", label: "Heroes" },
 ];
 
 /** Play mode: pick a boss challenge, then your deck on the battle page.
- * Hero tab: face the villain decks. Villain tab: face the hero decks. */
+ * Villains tab: face the heroes decks. Heroes tab: face the villain decks. */
 export default function ChallengesPage() {
-  const [side, setSide] = useState<ChallengeSide>("hero");
+  const [side, setSide] = useState<ChallengeSide>("villains");
   // Read localStorage after mount so server and client render the same HTML.
   const [done, setDone] = useState<Record<string, boolean>>({});
   useEffect(() => {

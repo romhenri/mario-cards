@@ -44,7 +44,7 @@ const RARITIES: { name: string; group: string; color: string; text: string }[] =
       name: "Legend",
       group: "Special",
       color: "#c29a06",
-      text: "A Special card: a powerful hero or ally.",
+      text: "A Special card: a powerful villain or ally.",
     },
     {
       name: "Boss",

@@ -1,8 +1,8 @@
 import { DECK_SIZE, type CardId } from "@mario-cards/shared";
 
-/** Which tab a challenge lives in: as the Hero you face villain decks,
- * as the Villain you face hero decks. */
-export type ChallengeSide = "hero" | "villain";
+/** Which tab a challenge lives in: as the Villain you face heroes decks,
+ * as the Heroes you face heroes decks. */
+export type ChallengeSide = "villains" | "heroes";
 
 /** A boss battle: the CPU plays a fixed themed deck fronted by its boss. */
 export interface Challenge {
@@ -21,7 +21,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Goombas",
     boss: "grand-goomba",
     description: "The goomba stampede: no specials, all teeth.",
-    side: "hero",
+    side: "villains",
     deck: [
       "goomba",
       "goomba",
@@ -46,7 +46,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Koopas",
     boss: "koopa-troopa",
     description: "Shells and spikes: the koopa troop, no specials.",
-    side: "hero",
+    side: "villains",
     deck: [
       "koopa-troopa",
       "koopa-troopa",
@@ -71,7 +71,7 @@ export const CHALLENGES: Challenge[] = [
     name: "King Bob-omb",
     boss: "king-bob-omb",
     description: "Explosives royalty: bombs and every kind of bullet.",
-    side: "hero",
+    side: "villains",
     deck: [
       "king-bob-omb",
       "bob-omb",
@@ -96,7 +96,7 @@ export const CHALLENGES: Challenge[] = [
     name: "King Boo",
     boss: "king-boo",
     description: "Haunted house: boos and the undead crew.",
-    side: "hero",
+    side: "villains",
     deck: [
       "king-boo",
       "boo",
@@ -121,7 +121,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Dino Piranha",
     boss: "dino-piranha",
     description: "Overgrowth: every piranha and pokey, one lone boss.",
-    side: "hero",
+    side: "villains",
     deck: [
       "snow-pokey",
       "snow-pokey",
@@ -146,7 +146,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Bowser Jr.",
     boss: "bowser-jr",
     description: "The koopa army, with Magikoopa as the second special.",
-    side: "hero",
+    side: "villains",
     deck: [
       "bowser-jr",
       "magikoopa",
@@ -172,7 +172,7 @@ export const CHALLENGES: Challenge[] = [
     boss: "bowser",
     description:
       "The Koopa King's full army: three specials and a wall of shells.",
-    side: "hero",
+    side: "villains",
     deck: [
       "dry-bones",
       "dry-bones",
@@ -193,11 +193,37 @@ export const CHALLENGES: Challenge[] = [
     ],
   },
   {
+    id: "bowsers-fury",
+    name: "Bowser's Fury",
+    boss: "fury-bowser",
+    description:
+      "The Koopa dynasty unleashed: five bosses over a shell wall.",
+    side: "villains",
+    deck: [
+      "dry-bones",
+      "dry-bones",
+      "dry-bones",
+      "spiny",
+      "koopa-troopa",
+      "koopa-troopa",
+      "koopa-troopa",
+      "lakitu",
+      "koopa-paratroopa",
+      "koopa-paratroopa",
+      "chargin-chuck",
+      "bowser-jr",
+      "bowser-jr-bust",
+      "magikoopa",
+      "bowser",
+      "fury-bowser",
+    ],
+  },
+  {
     id: "toad",
     name: "Toad",
     boss: "blue-toad",
     description: "The toad patrol: every color, no specials.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "blue-toad",
       "blue-toad",
@@ -222,7 +248,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Captain Toad",
     boss: "captain-toad",
     description: "The Toad Brigade on expedition.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "captain-toad",
       "yellow-toad",
@@ -247,7 +273,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Plessie",
     boss: "plessiee",
     description: "River rapids: Plessie and the whole fish crew.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "plessiee",
       "cheep-cheep",
@@ -272,7 +298,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Rosaline Galaxy",
     boss: "rosaline",
     description: "Cosmic guardian: Rosaline and the Galaxy crew.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "rosaline",
       "luma",
@@ -297,7 +323,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Queen Bee",
     boss: "queen-bee",
     description: "The hive queen and her Galaxy swarm.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "queen-bee",
       "bee",
@@ -322,7 +348,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Toadette",
     boss: "toadette",
     description: "Mushroom royalty: Toadette with Toad at her side.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "toadette",
       "toad",
@@ -345,9 +371,9 @@ export const CHALLENGES: Challenge[] = [
   {
     id: "mario-brothers",
     name: "Mario Brothers",
-    boss: "mario",
+    boss: "luigi",
     description: "Mario and Luigi with the Mushroom Kingdom crew.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "mario",
       "luigi",
@@ -372,7 +398,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Kong's Family",
     boss: "donkey-kong",
     description: "The Kong crew swings in with a jungle barrel brawl.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "spiny-skipsqueak",
       "spiny-skipsqueak",
@@ -397,7 +423,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Yoshi's Island",
     boss: "yoshi",
     description: "Every Yoshi rides out, backed by the koopa troop.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "koopa-troopa",
       "koopa-troopa",
@@ -422,7 +448,7 @@ export const CHALLENGES: Challenge[] = [
     name: "Princess Union",
     boss: "peach",
     description: "The four crowns unite, guarded by toads and lumas.",
-    side: "villain",
+    side: "heroes",
     deck: [
       "luma",
       "luma",
@@ -440,6 +466,31 @@ export const CHALLENGES: Challenge[] = [
       "daisy",
       "pauline",
       "rosaline",
+    ],
+  },
+  {
+    id: "3d-world-team",
+    name: "3DW Team",
+    boss: "mario",
+    description: "The heroes suit up with the whole 3D World crew.",
+    side: "heroes",
+    deck: [
+      "skipsqueak",
+      "Galoomba",
+      "ant-trooper",
+      "cat-goomba",
+      "spiny",
+      "blurker",
+      "piranha-creeper",
+      "splounder",
+      "walleye",
+      "goomba-stack",
+      "grand-Galoomba",
+      "toad",
+      "peach",
+      "luigi",
+      "rosaline",
+      "mario",
     ],
   },
 ];

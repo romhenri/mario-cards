@@ -52,7 +52,13 @@ export function DeckChooseModal({ onChoose, onCancel }: DeckChooseModalProps) {
         </div>
         <div className="deck-slots-row">
           {[...CHALLENGES]
-            .sort((a, b) => specialCount(a.deck) - specialCount(b.deck))
+            .sort(
+              (a, b) =>
+                specialCount(a.deck) - specialCount(b.deck) ||
+                // Same special count: heroes decks come first.
+                (a.side === "heroes" ? 0 : 1) -
+                  (b.side === "heroes" ? 0 : 1)
+            )
             .map((challenge) => {
             const unlocked = isChallengeDeckUnlocked(challenge, done);
             return (

@@ -18,4 +18,4 @@ curve — see BALANCED.md).
 * **Grand variants** (Grand Goomba, Grand Galoomba): always have **Taunt**
 * **Chomp and Bully**: always have **Taunt**
 * **Yoshis** (Yoshi, Blue, Red, Yellow): cost 5 and always have **Reach**
-* **Toads** (Toad, Toadette, Blue, Purple, Red, Yellow): cost 3 and always have **Quick** — Captain Toad is the exception (4-cost hero with **Taunt**)
+* **Toads** (Toad, Toadette, Blue, Purple, Red, Yellow): cost 3 and always have **Quick** — Captain Toad is the exception (4-cost villains with **Taunt**)

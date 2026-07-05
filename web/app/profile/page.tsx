@@ -48,8 +48,8 @@ export default function ProfilePage() {
     setSlots(loadDeckSlots());
   }, []);
 
-  const hero = challengeProgress("hero", done);
-  const villain = challengeProgress("villain", done);
+  const villain = challengeProgress("villains", done);
+  const heroes = challengeProgress("heroes", done);
 
   return (
     <main className="page">
@@ -77,8 +77,8 @@ export default function ProfilePage() {
         <section className="profile-section" aria-label="Challenge progress">
           <h3>Challenges</h3>
           {[
-            { label: "Hero", progress: hero },
-            { label: "Villain", progress: villain },
+            { label: "Villains", progress: villain },
+            { label: "Heroes", progress: heroes },
           ].map(({ label, progress }) => (
             <div className="profile-progress" key={label}>
               <span className="profile-progress-label">{label}</span>

@@ -94,7 +94,31 @@ export type CardId =
   | "star-bunny"
   | "dixie-kong"
   | "queen-bee"
-  | "dino-piranha";
+  | "dino-piranha"
+  | "blurker"
+  | "cat-banzai-bill"
+  | "flopter"
+  | "fuzzy"
+  | "goomba-stack"
+  | "madpole"
+  | "rabbit"
+  | "skipsqueak"
+  | "spiny"
+  | "ty-foo"
+  | "walleye"
+  | "boom-boom"
+  | "calico-cat"
+  | "cat-bully"
+  | "cat-goomba2"
+  | "piranha-plant-cat"
+  | "bowser-jr-bust"
+  | "fury-bowser"
+  | "brolder"
+  | "coin-coffer"
+  | "rammerhead"
+  | "pom-pom"
+  | "prince-bully"
+  | "hisstocrat";
 
 export type CardRarity = "common" | "rare" | "legend" | "boss";
 
@@ -114,7 +138,7 @@ export function isSpecialRarity(rarity: CardRarity): boolean {
 
 // Source game of the card; "3D" is the generic bucket for cards not tied
 // to a specific game (default when unknown)
-export type CardGame = "3D" | "3DWorld" | "Galaxy";
+export type CardGame = "3D" | "3DWorld" | "Galaxy" | "BowersFury";
 
 // Creature families, used to group cards in the catalog and deck builder
 export type CreatureType =
@@ -131,7 +155,7 @@ export type CreatureType =
   | "other"
   | "princess"
   | "toad"
-  | "hero"
+  | "villains"
   | "dino"
   | "kong"
   | "fish"

@@ -1,0 +1,563 @@
+{
+  "generatedAt": "2026-07-05T18:34:33+00:00",
+  "totalCards": 144,
+  "costDistribution": {
+    "1": 9,
+    "2": 25,
+    "3": 39,
+    "4": 32,
+    "5": 29,
+    "6": 8,
+    "7": 1,
+    "8": 0,
+    "9": 1
+  },
+  "rarityDistribution": {
+    "common": 58,
+    "rare": 38,
+    "legend": 34,
+    "boss": 14
+  },
+  "vanillaVsSkilled": {
+    "vanilla": 15,
+    "skilled": 129
+  },
+  "skillFrequency": [
+    {
+      "skill": "quick",
+      "count": 30
+    },
+    {
+      "skill": "fly",
+      "count": 30
+    },
+    {
+      "skill": "taunt",
+      "count": 29
+    },
+    {
+      "skill": "reach",
+      "count": 28
+    },
+    {
+      "skill": "shield",
+      "count": 21
+    },
+    {
+      "skill": "stealth",
+      "count": 12
+    },
+    {
+      "skill": "bomb",
+      "count": 5
+    }
+  ],
+  "byCreatureType": {
+    "koopa": {
+      "count": 24,
+      "costDistribution": {
+        "2": 2,
+        "3": 4,
+        "4": 9,
+        "5": 6,
+        "6": 1,
+        "7": 1,
+        "8": 0,
+        "9": 1
+      },
+      "skillFrequency": [
+        {
+          "skill": "shield",
+          "count": 9
+        },
+        {
+          "skill": "reach",
+          "count": 8
+        },
+        {
+          "skill": "fly",
+          "count": 6
+        },
+        {
+          "skill": "quick",
+          "count": 4
+        },
+        {
+          "skill": "taunt",
+          "count": 3
+        }
+      ]
+    },
+    "dino": {
+      "count": 12,
+      "costDistribution": {
+        "2": 1,
+        "3": 0,
+        "4": 2,
+        "5": 9
+      },
+      "skillFrequency": [
+        {
+          "skill": "reach",
+          "count": 9
+        },
+        {
+          "skill": "quick",
+          "count": 2
+        },
+        {
+          "skill": "fly",
+          "count": 2
+        },
+        {
+          "skill": "taunt",
+          "count": 1
+        },
+        {
+          "skill": "shield",
+          "count": 1
+        }
+      ]
+    },
+    "goomba": {
+      "count": 12,
+      "costDistribution": {
+        "1": 1,
+        "2": 7,
+        "3": 1,
+        "4": 2,
+        "5": 1
+      },
+      "skillFrequency": [
+        {
+          "skill": "taunt",
+          "count": 3
+        },
+        {
+          "skill": "stealth",
+          "count": 2
+        },
+        {
+          "skill": "fly",
+          "count": 2
+        },
+        {
+          "skill": "quick",
+          "count": 1
+        },
+        {
+          "skill": "reach",
+          "count": 1
+        }
+      ]
+    },
+    "other": {
+      "count": 12,
+      "costDistribution": {
+        "1": 1,
+        "2": 2,
+        "3": 4,
+        "4": 2,
+        "5": 3
+      },
+      "skillFrequency": [
+        {
+          "skill": "taunt",
+          "count": 5
+        },
+        {
+          "skill": "shield",
+          "count": 4
+        },
+        {
+          "skill": "quick",
+          "count": 1
+        },
+        {
+          "skill": "fly",
+          "count": 1
+        },
+        {
+          "skill": "reach",
+          "count": 1
+        }
+      ]
+    },
+    "insect": {
+      "count": 11,
+      "costDistribution": {
+        "1": 1,
+        "2": 6,
+        "3": 2,
+        "4": 1,
+        "5": 1
+      },
+      "skillFrequency": [
+        {
+          "skill": "fly",
+          "count": 5
+        },
+        {
+          "skill": "quick",
+          "count": 3
+        },
+        {
+          "skill": "taunt",
+          "count": 1
+        }
+      ]
+    },
+    "plant": {
+      "count": 11,
+      "costDistribution": {
+        "2": 1,
+        "3": 5,
+        "4": 3,
+        "5": 0,
+        "6": 2
+      },
+      "skillFrequency": [
+        {
+          "skill": "taunt",
+          "count": 9
+        },
+        {
+          "skill": "quick",
+          "count": 2
+        },
+        {
+          "skill": "shield",
+          "count": 1
+        },
+        {
+          "skill": "fly",
+          "count": 1
+        }
+      ]
+    },
+    "animal": {
+      "count": 8,
+      "costDistribution": {
+        "1": 2,
+        "2": 3,
+        "3": 2,
+        "4": 0,
+        "5": 0,
+        "6": 1
+      },
+      "skillFrequency": [
+        {
+          "skill": "quick",
+          "count": 2
+        },
+        {
+          "skill": "reach",
+          "count": 2
+        },
+        {
+          "skill": "stealth",
+          "count": 1
+        }
+      ]
+    },
+    "toad": {
+      "count": 8,
+      "costDistribution": {
+        "3": 6,
+        "4": 2
+      },
+      "skillFrequency": [
+        {
+          "skill": "quick",
+          "count": 6
+        },
+        {
+          "skill": "taunt",
+          "count": 2
+        }
+      ]
+    },
+    "bomb": {
+      "count": 7,
+      "costDistribution": {
+        "2": 1,
+        "3": 3,
+        "4": 0,
+        "5": 3
+      },
+      "skillFrequency": [
+        {
+          "skill": "bomb",
+          "count": 4
+        },
+        {
+          "skill": "fly",
+          "count": 4
+        },
+        {
+          "skill": "quick",
+          "count": 3
+        },
+        {
+          "skill": "taunt",
+          "count": 1
+        }
+      ]
+    },
+    "bro": {
+      "count": 6,
+      "costDistribution": {
+        "3": 1,
+        "4": 4,
+        "5": 0,
+        "6": 1
+      },
+      "skillFrequency": [
+        {
+          "skill": "reach",
+          "count": 5
+        },
+        {
+          "skill": "taunt",
+          "count": 2
+        }
+      ]
+    },
+    "heroes": {
+      "count": 6,
+      "costDistribution": {
+        "3": 2,
+        "4": 0,
+        "5": 3,
+        "6": 1
+      },
+      "skillFrequency": [
+        {
+          "skill": "stealth",
+          "count": 2
+        },
+        {
+          "skill": "shield",
+          "count": 1
+        },
+        {
+          "skill": "quick",
+          "count": 1
+        },
+        {
+          "skill": "reach",
+          "count": 1
+        }
+      ]
+    },
+    "princess": {
+      "count": 6,
+      "costDistribution": {
+        "3": 2,
+        "4": 3,
+        "5": 1
+      },
+      "skillFrequency": [
+        {
+          "skill": "shield",
+          "count": 5
+        },
+        {
+          "skill": "fly",
+          "count": 1
+        }
+      ]
+    },
+    "fish": {
+      "count": 5,
+      "costDistribution": {
+        "1": 2,
+        "2": 1,
+        "3": 0,
+        "4": 2
+      },
+      "skillFrequency": [
+        {
+          "skill": "quick",
+          "count": 2
+        },
+        {
+          "skill": "taunt",
+          "count": 1
+        },
+        {
+          "skill": "stealth",
+          "count": 1
+        }
+      ]
+    },
+    "ghost": {
+      "count": 5,
+      "costDistribution": {
+        "3": 3,
+        "4": 0,
+        "5": 0,
+        "6": 2
+      },
+      "skillFrequency": [
+        {
+          "skill": "fly",
+          "count": 5
+        },
+        {
+          "skill": "stealth",
+          "count": 3
+        },
+        {
+          "skill": "bomb",
+          "count": 1
+        }
+      ]
+    },
+    "kong": {
+      "count": 3,
+      "costDistribution": {
+        "3": 1,
+        "4": 1,
+        "5": 1
+      },
+      "skillFrequency": [
+        {
+          "skill": "taunt",
+          "count": 1
+        },
+        {
+          "skill": "quick",
+          "count": 1
+        },
+        {
+          "skill": "fly",
+          "count": 1
+        }
+      ]
+    },
+    "mole": {
+      "count": 3,
+      "costDistribution": {
+        "3": 1,
+        "4": 1,
+        "5": 1
+      },
+      "skillFrequency": [
+        {
+          "skill": "stealth",
+          "count": 3
+        },
+        {
+          "skill": "reach",
+          "count": 1
+        }
+      ]
+    },
+    "shy-guy": {
+      "count": 3,
+      "costDistribution": {
+        "2": 1,
+        "3": 2
+      },
+      "skillFrequency": [
+        {
+          "skill": "quick",
+          "count": 1
+        },
+        {
+          "skill": "fly",
+          "count": 1
+        }
+      ]
+    },
+    "star": {
+      "count": 2,
+      "costDistribution": {
+        "1": 2
+      },
+      "skillFrequency": [
+        {
+          "skill": "quick",
+          "count": 1
+        },
+        {
+          "skill": "fly",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "boss": {
+    "count": 14,
+    "costDistribution": {
+      "4": 6,
+      "5": 5,
+      "6": 3
+    },
+    "skillFrequency": [
+      {
+        "skill": "taunt",
+        "count": 4
+      },
+      {
+        "skill": "quick",
+        "count": 4
+      },
+      {
+        "skill": "reach",
+        "count": 4
+      },
+      {
+        "skill": "fly",
+        "count": 3
+      },
+      {
+        "skill": "shield",
+        "count": 2
+      },
+      {
+        "skill": "stealth",
+        "count": 1
+      }
+    ]
+  },
+  "legend": {
+    "count": 34,
+    "costDistribution": {
+      "3": 7,
+      "4": 7,
+      "5": 16,
+      "6": 2,
+      "7": 1,
+      "8": 0,
+      "9": 1
+    },
+    "skillFrequency": [
+      {
+        "skill": "reach",
+        "count": 11
+      },
+      {
+        "skill": "shield",
+        "count": 10
+      },
+      {
+        "skill": "taunt",
+        "count": 6
+      },
+      {
+        "skill": "quick",
+        "count": 6
+      },
+      {
+        "skill": "fly",
+        "count": 4
+      },
+      {
+        "skill": "stealth",
+        "count": 2
+      }
+    ]
+  }
+}

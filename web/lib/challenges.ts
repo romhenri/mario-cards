@@ -1,7 +1,12 @@
-import { DECK_SIZE, type CardId } from "@mario-cards/shared";
+import {
+  CARD_CATALOG,
+  DECK_SIZE,
+  isSpecialRarity,
+  type CardId,
+} from "@mario-cards/shared";
 
-/** Which tab a challenge lives in: as the Villain you face heroes decks,
- * as the Heroes you face heroes decks. */
+/** Which tab a challenge lives in: "villains" are the enemy boss decks,
+ * "heroes" are the hero/ally boss decks. */
 export type ChallengeSide = "villains" | "heroes";
 
 /** A boss battle: the CPU plays a fixed themed deck fronted by its boss. */
@@ -64,6 +69,31 @@ export const CHALLENGES: Challenge[] = [
       "lakitu",
       "chargin-chuck",
       "chargin-chuck",
+    ],
+  },
+  {
+    id: "insects",
+    name: "Insect Swarm",
+    boss: "wiggler",
+    description: "A buzzing swarm: evasive fliers and quick bugs, no specials.",
+    side: "villains",
+    deck: [
+      "biddybud",
+      "biddybud",
+      "ant-trooper",
+      "ant-trooper",
+      "fuzzy",
+      "fuzzy",
+      "stingby",
+      "stingby",
+      "flopter",
+      "bee",
+      "bee",
+      "flutter",
+      "flutter",
+      "wiggler",
+      "wiggler",
+      "wiggler",
     ],
   },
   {
@@ -142,6 +172,31 @@ export const CHALLENGES: Challenge[] = [
     ],
   },
   {
+    id: "kamek",
+    name: "Kamek",
+    boss: "kamek",
+    description: "The royal wizard commands the koopa troop, Magikoopa at his side.",
+    side: "villains",
+    deck: [
+      "dry-bones",
+      "dry-bones",
+      "spiny",
+      "spiny",
+      "koopa-troopa",
+      "koopa-troopa",
+      "koopa-troopa",
+      "lakitu",
+      "lakitu",
+      "spike",
+      "koopa-paratroopa",
+      "koopa-paratroopa",
+      "chargin-chuck",
+      "paradrybones",
+      "magikoopa",
+      "kamek",
+    ],
+  },
+  {
     id: "bowser-jr",
     name: "Bowser Jr.",
     boss: "bowser-jr",
@@ -149,7 +204,7 @@ export const CHALLENGES: Challenge[] = [
     side: "villains",
     deck: [
       "bowser-jr",
-      "magikoopa",
+      "kamek",
       "koopa-troopa",
       "koopa-troopa",
       "koopa-troopa",
@@ -164,6 +219,31 @@ export const CHALLENGES: Challenge[] = [
       "chargin-chuck",
       "chargin-chuck",
       "lakitu",
+    ],
+  },
+  {
+    id: "wario-brothers",
+    name: "Wario Brothers",
+    boss: "wario",
+    description: "Wario and Waluigi lead a crew of thieves, bombs and bruisers.",
+    side: "villains",
+    deck: [
+      "coin-coffer",
+      "spiny-skipsqueak",
+      "bob-omb",
+      "bob-omb",
+      "blooper",
+      "blooper",
+      "nabbit",
+      "monty-mole",
+      "bullet-bill",
+      "para-bomb",
+      "chargin-chuck",
+      "bully",
+      "rocky-wrench",
+      "chomp",
+      "wario",
+      "waluigi",
     ],
   },
   {
@@ -187,7 +267,7 @@ export const CHALLENGES: Challenge[] = [
       "chargin-chuck",
       "hammer-bro",
       "bowser-jr",
-      "magikoopa",
+      "kamek",
       "sledge-bro",
       "bowser",
     ],
@@ -209,13 +289,38 @@ export const CHALLENGES: Challenge[] = [
       "koopa-troopa",
       "lakitu",
       "koopa-paratroopa",
-      "koopa-paratroopa",
+      "kamek",
       "chargin-chuck",
       "bowser-jr",
       "bowser-jr-bust",
       "magikoopa",
       "bowser",
       "fury-bowser",
+    ],
+  },
+  {
+    id: "koopalings",
+    name: "Koopalings",
+    boss: "ludwig",
+    description: "Ludwig leads the seven Koopalings over a koopa shell wall.",
+    side: "villains",
+    deck: [
+      "dry-bones",
+      "dry-bones",
+      "spiny",
+      "koopa-troopa",
+      "koopa-troopa",
+      "koopa-troopa",
+      "lakitu",
+      "lakitu",
+      "spike",
+      "larry",
+      "iggy",
+      "lemmy",
+      "wendy",
+      "morton",
+      "roy",
+      "ludwig",
     ],
   },
   {
@@ -419,6 +524,31 @@ export const CHALLENGES: Challenge[] = [
     ],
   },
   {
+    id: "yoshi-babies",
+    name: "Yoshi n Babies",
+    boss: "yoshi",
+    description: "Yoshi's Island: the babies ride out with the Shy Guy crew.",
+    side: "heroes",
+    deck: [
+      "biddybud",
+      "balloon-baby-yoshi",
+      "para-biddybud",
+      "Galoomba",
+      "winged-Galoomba",
+      "skating-shy-guy",
+      "baby-mario",
+      "baby-luigi",
+      "shy-guy",
+      "fly-guy",
+      "piranha-creeper",
+      "flutter",
+      "wiggler",
+      "wiggler",
+      "wiggler",
+      "yoshi",
+    ],
+  },
+  {
     id: "yoshis-island",
     name: "Yoshi's Island",
     boss: "yoshi",
@@ -469,6 +599,32 @@ export const CHALLENGES: Challenge[] = [
     ],
   },
   {
+    id: "mario-wario-brothers",
+    name: "MW Brothers",
+    boss: "waluigi",
+    description:
+      "All four brothers unite: Mario, Luigi, Wario and Waluigi with the crew.",
+    side: "heroes",
+    deck: [
+      "coin-coffer",
+      "goomba",
+      "Galoomba",
+      "dry-bones",
+      "koopa-troopa",
+      "red-toad",
+      "blue-toad",
+      "yellow-toad",
+      "purple-toad",
+      "nabbit",
+      "chargin-chuck",
+      "bully",
+      "luigi",
+      "wario",
+      "waluigi",
+      "mario",
+    ],
+  },
+  {
     id: "3d-world-team",
     name: "3DW Team",
     boss: "mario",
@@ -495,15 +651,33 @@ export const CHALLENGES: Challenge[] = [
   },
 ];
 
-/** Challenge decks double as playable decks. The first challenge of each
- * side is unlocked from the start; every other deck unlocks by beating
- * its challenge — win them all to own them all. */
+/** How many Special cards (legend or boss) a challenge deck holds. */
+export function challengeSpecialCount(challenge: Challenge): number {
+  return challenge.deck.filter((id) => isSpecialRarity(CARD_CATALOG[id].rarity))
+    .length;
+}
+
+/** Challenges in the canonical display order shared by the deck selector and
+ * the profile: Goombas (the starter deck) always first, then fewest specials
+ * first, heroes before villains on ties. */
+export function sortedChallenges(): Challenge[] {
+  return [...CHALLENGES].sort(
+    (a, b) =>
+      (a.id === "goombas" ? 0 : 1) - (b.id === "goombas" ? 0 : 1) ||
+      challengeSpecialCount(a) - challengeSpecialCount(b) ||
+      (a.side === "heroes" ? 0 : 1) - (b.side === "heroes" ? 0 : 1)
+  );
+}
+
+/** Challenge decks double as playable decks. Only the first villains
+ * challenge is unlocked from the start; every other deck — including all
+ * heroes decks — unlocks by beating its challenge. */
 export function isChallengeDeckUnlocked(
   challenge: Challenge,
   done: Record<string, boolean>
 ): boolean {
   if (done[challenge.id]) return true;
-  return CHALLENGES.find((c) => c.side === challenge.side)?.id === challenge.id;
+  return CHALLENGES.find((c) => c.side === "villains")?.id === challenge.id;
 }
 
 for (const challenge of CHALLENGES) {

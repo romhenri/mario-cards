@@ -7,6 +7,7 @@ import { Header } from "../../components/layout/Header";
 import {
   CHALLENGES,
   isChallengeDeckUnlocked,
+  sortedChallenges,
   type ChallengeSide,
 } from "../../lib/challenges";
 import { loadCompletedChallenges } from "../../lib/challengeStore";
@@ -98,7 +99,7 @@ export default function ProfilePage() {
         <section className="profile-section" aria-label="Deck slots">
           <h3>Decks</h3>
           <div className="deck-slots-row">
-            {CHALLENGES.map((challenge) => {
+            {sortedChallenges().map((challenge) => {
               const unlocked = isChallengeDeckUnlocked(challenge, done);
               return (
                 <DeckSlotCard
@@ -109,7 +110,9 @@ export default function ProfilePage() {
                     cards: challenge.deck,
                   }}
                   locked={!unlocked}
-                  onClick={() => router.push("/play/challenge")}
+                  onClick={() =>
+                    router.push(`/decks/challenge/${challenge.id}`)
+                  }
                 />
               );
             })}
@@ -120,7 +123,9 @@ export default function ProfilePage() {
               <DeckSlotCard
                 key={i}
                 deck={slot}
-                onClick={() => router.push("/deck")}
+                onClick={() =>
+                  router.push(slot ? `/decks/custom/${i}` : "/deck")
+                }
               />
             ))}
           </div>

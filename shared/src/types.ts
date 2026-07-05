@@ -118,7 +118,31 @@ export type CardId =
   | "rammerhead"
   | "pom-pom"
   | "prince-bully"
-  | "hisstocrat";
+  | "hisstocrat"
+  | "dorrie"
+  | "kamek"
+  | "balloon-baby-yoshi"
+  | "nabbit"
+  | "sumo-bro"
+  | "larry"
+  | "iggy"
+  | "lemmy"
+  | "wendy"
+  | "morton"
+  | "roy"
+  | "ludwig"
+  | "pianta"
+  | "petey-piranha"
+  | "skating-shy-guy"
+  | "orange-yoshi"
+  | "pink-yoshi"
+  | "purple-yoshi"
+  | "baby-mario"
+  | "baby-luigi"
+  | "baby-peach"
+  | "baby-daisy"
+  | "toadsworth"
+  | "noshi";
 
 export type CardRarity = "common" | "rare" | "legend" | "boss";
 
@@ -138,7 +162,13 @@ export function isSpecialRarity(rarity: CardRarity): boolean {
 
 // Source game of the card; "3D" is the generic bucket for cards not tied
 // to a specific game (default when unknown)
-export type CardGame = "3D" | "3DWorld" | "Galaxy" | "BowersFury";
+export type CardGame =
+  | "3D"
+  | "Galaxy"
+  | "NewBrosU"
+  | "3DWorld"
+  | "BowersFury"
+  | "Sunshine";
 
 // Creature families, used to group cards in the catalog and deck builder
 export type CreatureType =
@@ -155,7 +185,7 @@ export type CreatureType =
   | "other"
   | "princess"
   | "toad"
-  | "villains"
+  | "heroes"
   | "dino"
   | "kong"
   | "fish"

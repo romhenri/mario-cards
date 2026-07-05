@@ -1304,9 +1304,14 @@ a {
 .deck-slots-row {
   display: flex;
   gap: 16px;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   margin: 16px 0 24px;
+}
+
+/* Tighter spacing inside the match-start deck selector */
+.deck-choose .deck-slots-row {
+  gap: 8px;
 }
 
 .deck-slot-card {
@@ -1378,7 +1383,7 @@ a {
 }
 
 .deck-slot-card-name {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: bold;
   max-width: 92px;
   overflow: hidden;
@@ -1490,6 +1495,8 @@ a {
 
 /* --- Deck choose modal (match start) --- */
 .deck-choose {
+  display: flex;
+  flex-direction: column;
   text-align: center;
   padding: 24px 32px;
   background: #16213e;
@@ -1498,10 +1505,45 @@ a {
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
   /* Wide enough for 7 deck slots (104px each + 16px gaps) on one row */
   max-width: min(896px, calc(100vw - 24px));
-  /* Rows wrap freely (challenge decks can grow to a 3rd line and beyond);
-     cap the height so the modal scrolls instead of overflowing the screen. */
+  /* Header stays put; only the deck list (.deck-choose-body) scrolls. Cap
+     the height so the modal never overflows the screen. */
   max-height: calc(100vh - 24px);
+  overflow: hidden;
+}
+
+/* Scrollable deck list under the fixed header */
+.deck-choose-body {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  /* Breathing room between the cards and the scrollbar */
+  padding-right: 8px;
+  margin-right: -12px;
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #5c6bd6 transparent;
+}
+
+.deck-choose-body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.deck-choose-body::-webkit-scrollbar-track {
+  background: #0f1330;
+  border-radius: 10px;
+  margin: 4px 0;
+}
+
+.deck-choose-body::-webkit-scrollbar-thumb {
+  background: #4a4e8f;
+  border: 2px solid #16213e;
+  border-radius: 10px;
+}
+
+.deck-choose-body::-webkit-scrollbar-thumb:hover {
+  background: #6b6fbf;
 }
 
 .deck-choose-header {
@@ -1537,4 +1579,262 @@ a {
 .deck-choose-random:hover,
 .deck-choose-cancel:hover {
   border-color: #ffd700;
+}
+
+/* --- Stats page --- */
+.stats-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: min(720px, 100%);
+  margin: 0 auto;
+}
+
+.stats-section {
+  padding: 18px 24px;
+  background: #23264a;
+  border: 2px solid #4a4e8f;
+  border-radius: 16px;
+}
+
+.stats-section h3 {
+  margin: 0 0 14px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffd93b;
+}
+
+.stats-section .guide-lead {
+  margin-top: -6px;
+}
+
+/* KPI tiles */
+.stats-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stats-kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 8px;
+  background: #1a1c38;
+  border: 1px solid #3a3f77;
+  border-radius: 12px;
+}
+
+.stats-kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.stats-kpi-label {
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #9aa0d0;
+}
+
+/* Horizontal bar list */
+.stats-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.stats-bar-row {
+  display: grid;
+  grid-template-columns: 64px 1fr 34px;
+  align-items: center;
+  gap: 10px;
+}
+
+.stats-bar-label {
+  font-size: 13px;
+  color: #c7cbf0;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stats-bar-track {
+  height: 14px;
+  background: #14162e;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.stats-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 7px;
+  min-width: 2px;
+  transition: width 0.3s ease;
+}
+
+.stats-bar-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: #eaeaea;
+  text-align: right;
+}
+
+/* Per-family / per-tier grid of compact cards */
+.stats-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+.stats-type-card {
+  padding: 12px 14px;
+  background: #1a1c38;
+  border: 1px solid #3a3f77;
+  border-radius: 12px;
+}
+
+.stats-type-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.stats-type-name {
+  font-weight: 800;
+  color: #fff;
+}
+
+.stats-type-count {
+  font-size: 11px;
+  color: #9aa0d0;
+}
+
+.stats-mini-label {
+  margin: 10px 0 6px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #7f86bd;
+}
+
+.stats-type-card .stats-bar-row {
+  grid-template-columns: 20px 1fr 24px;
+  gap: 8px;
+}
+
+.stats-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stats-chip {
+  font-size: 12px;
+  padding: 3px 8px;
+  background: #2b2f5c;
+  border: 1px solid #4a4e8f;
+  border-radius: 999px;
+  color: #c7cbf0;
+}
+
+.stats-chip b {
+  color: #ffd93b;
+}
+
+.stats-empty {
+  margin: 0;
+  font-size: 12px;
+  color: #7f86bd;
+}
+
+.stats-meta {
+  text-align: center;
+  font-size: 12px;
+  color: #7f86bd;
+}
+
+/* Update control */
+.stats-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.stats-update-btn {
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  background: #5c6bd6;
+  color: #fff;
+  border: 2px solid #4a4e8f;
+  border-radius: 8px;
+}
+
+.stats-update-btn:hover:not(:disabled) {
+  border-color: #ffd700;
+}
+
+.stats-update-error {
+  font-size: 12px;
+  color: #ff8a80;
+}
+
+/* --- Deck view (read-only deck contents) --- */
+.deckview {
+  width: min(760px, 100%);
+  margin: 0 auto;
+}
+
+.deckview-title {
+  text-align: center;
+  margin: 0 0 4px;
+}
+
+.deckview-summary {
+  text-align: center;
+  margin: 0 0 20px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #9aa0d0;
+}
+
+.deckview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 14px;
+  justify-items: center;
+}
+
+.deckview-item {
+  position: relative;
+}
+
+.deckview-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: #1a1a2e;
+  background: #ffd93b;
+  border: 2px solid #23264a;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }

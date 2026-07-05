@@ -91,6 +91,18 @@ export function ModeSelect() {
           />
           <span className="nav-pill-label">How to Play</span>
         </button>
+        <button
+          className="nav-pill blue"
+          onClick={() => router.push("/stats")}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="nav-pill-icon"
+            src="/cards-assets/CoinCoffer.png"
+            alt=""
+          />
+          <span className="nav-pill-label">Stats</span>
+        </button>
       </nav>
     </div>
   );

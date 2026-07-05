@@ -10,8 +10,10 @@ import { sortCards } from "../../lib/cardTypes";
  * only cards tied to a specific game show up in a collection. */
 const GAMES: { game: CardGame; label: string }[] = [
   { game: "Galaxy", label: "Galaxy" },
+  { game: "NewBrosU", label: "SM Bros U" },
   { game: "3DWorld", label: "3D World" },
   { game: "BowersFury", label: "Bowser's Fury" },
+  { game: "Sunshine", label: "Sunshine" },
 ];
 
 const COLLECTIONS = GAMES.map(({ game, label }) => ({

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { CARD_CATALOG, DECK_SIZE } from "@mario-cards/shared";
+import { CARD_CATALOG, DECK_SIZE, isSpecialRarity } from "@mario-cards/shared";
 import { cardStyle } from "../../../components/board/CardFace";
 import { Header } from "../../../components/layout/Header";
 import { CHALLENGES, type ChallengeSide } from "../../../lib/challenges";
@@ -45,8 +45,8 @@ export default function ChallengesPage() {
         {CHALLENGES.filter((challenge) => challenge.side === side).map(
           (challenge) => {
             const boss = CARD_CATALOG[challenge.boss];
-            const legends = challenge.deck.filter(
-              (id) => CARD_CATALOG[id].rarity === "legend"
+            const specials = challenge.deck.filter((id) =>
+              isSpecialRarity(CARD_CATALOG[id].rarity)
             ).length;
             const cleared = done[challenge.id] === true;
             return (
@@ -71,8 +71,20 @@ export default function ChallengesPage() {
                   <span className="deck-slot-card-badge">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={legends > 0 ? "/icons/star.png" : "/icons/mushroom.png"}
-                      alt={legends > 0 ? "Legend deck" : "Standard deck"}
+                      src={
+                        specials > 2
+                          ? "/icons/RainbowStar.png"
+                          : specials >= 1
+                            ? "/icons/star.png"
+                            : "/icons/mushroom.png"
+                      }
+                      alt={
+                        specials > 2
+                          ? "Unlimited-special deck"
+                          : specials >= 1
+                            ? "Special deck"
+                            : "Standard deck"
+                      }
                       draggable={false}
                     />
                   </span>
@@ -84,9 +96,9 @@ export default function ChallengesPage() {
                   </span>
                   <span className="challenge-card-deck">
                     {DECK_SIZE} cards ·{" "}
-                    {legends === 0
-                      ? "no legends"
-                      : `${legends} ${legends === 1 ? "legend" : "legends"}`}
+                    {specials === 0
+                      ? "no specials"
+                      : `${specials} ${specials === 1 ? "special" : "specials"}`}
                   </span>
                 </span>
                 <span className="challenge-card-side">

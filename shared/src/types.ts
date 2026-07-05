@@ -82,9 +82,39 @@ export type CardId =
   | "yellow-yoshi"
   | "diddy-kong"
   | "wario"
-  | "waluigi";
+  | "waluigi"
+  | "luma"
+  | "blue-luma"
+  | "bomb-boo"
+  | "bee"
+  | "electrogoomba"
+  | "octoguy"
+  | "pokeyplant"
+  | "spiny-piranha-plant"
+  | "star-bunny"
+  | "dixie-kong"
+  | "queen-bee"
+  | "dino-piranha";
 
-export type CardRarity = "common" | "rare" | "legend";
+export type CardRarity = "common" | "rare" | "legend" | "boss";
+
+// Rarities split into two groups. "Normal" cards (common, rare) are the
+// everyday deck filler; "Special" cards (legend, boss) are the powerful tier
+// that deck rules key off of — a deck's type is set by how many it holds.
+export type RarityGroup = "normal" | "special";
+
+export function rarityGroup(rarity: CardRarity): RarityGroup {
+  return rarity === "legend" || rarity === "boss" ? "special" : "normal";
+}
+
+/** True for the Special tier (legend or boss). */
+export function isSpecialRarity(rarity: CardRarity): boolean {
+  return rarityGroup(rarity) === "special";
+}
+
+// Source game of the card; "3D" is the generic bucket for cards not tied
+// to a specific game (default when unknown)
+export type CardGame = "3D" | "3DWorld" | "Galaxy";
 
 // Creature families, used to group cards in the catalog and deck builder
 export type CreatureType =
@@ -104,7 +134,8 @@ export type CreatureType =
   | "hero"
   | "dino"
   | "kong"
-  | "fish";
+  | "fish"
+  | "star";
 
 export interface CardDefinition {
   id: CardId;
@@ -114,6 +145,7 @@ export interface CardDefinition {
   attack: number; // base attack
   health: number; // base health
   rarity: CardRarity;
+  game: CardGame;
   stealth: boolean;
   taunt: boolean;
   quick: boolean;

@@ -54,12 +54,12 @@ export interface CpuGame {
 
 /** `deck` is the human's chosen deck (null = random). While it is still
  * `undefined` (deck-choose modal open) the game does not start.
- * `excludeLegends` keeps legend-rarity cards out of the random decks
+ * `excludeSpecials` keeps Special cards (legend/boss) out of the random decks
  * (used by Quick Match). `cpuDeck` fixes the CPU's deck (challenge
  * bosses); null falls back to a random one. */
 export function useCpuGame(
   deck: CardId[] | null | undefined,
-  excludeLegends = false,
+  excludeSpecials = false,
   cpuDeck: CardId[] | null = null
 ): CpuGame {
   const [ui, dispatch] = useReducer(gameUiReducer, initialGameUiState);
@@ -114,14 +114,14 @@ export function useCpuGame(
     // Human uses the deck chosen at match start (if any); the CPU plays
     // its challenge deck, or a random one outside challenges.
     const randomDeck = () =>
-      buildRandomDeck(Math.random, { excludeLegends });
+      buildRandomDeck(Math.random, { excludeSpecials });
     const state = createGame(HUMAN_PLAYER_ID, CPU_PLAYER_ID, undefined, [
       deck ?? randomDeck(),
       cpuDeck ? [...cpuDeck] : randomDeck(),
     ]);
     publish(state);
     if (state.activePlayerIndex === CPU_INDEX) void runCpuTurn();
-  }, [deck, cpuDeck, excludeLegends, publish, runCpuTurn]);
+  }, [deck, cpuDeck, excludeSpecials, publish, runCpuTurn]);
 
   useEffect(() => {
     if (deck === undefined) return; // still choosing a deck

@@ -3,7 +3,7 @@ import { Header } from "../components/layout/Header";
 
 export default function HomePage() {
   return (
-    <main className="page">
+    <main className="page home">
       <Header />
       <ModeSelect />
     </main>

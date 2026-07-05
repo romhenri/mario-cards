@@ -27,6 +27,16 @@ button:disabled {
   padding: 24px 16px;
 }
 
+/* Home: push the whole block (title, tiles, nav) down toward the center
+   of the viewport instead of hugging the top. */
+.page.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 6vh;
+}
+
 /* --- Header ---
    Three columns keep the logo centered regardless of the back button:
    back pill on the left, logo in the middle, empty balance on the right. */
@@ -240,6 +250,10 @@ button:disabled {
   --pill-border: #2e7d32;
 }
 
+.nav-pill.red {
+  --pill-border: #c62828;
+}
+
 .nav-pill-icon {
   width: 26px;
   height: 26px;
@@ -268,6 +282,134 @@ button:disabled {
   .home-nav {
     grid-template-columns: 1fr;
   }
+}
+
+/* --- How to Play guide ---
+   Reuses the profile card look: dark rounded panels stacked in a column. */
+.guide-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: min(640px, 100%);
+  margin: 0 auto;
+}
+
+.guide-section {
+  padding: 18px 24px;
+  background: #23264a;
+  border: 2px solid #4a4e8f;
+  border-radius: 16px;
+}
+
+.guide-section h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffd93b;
+}
+
+.guide-lead {
+  margin: 0 0 14px;
+  color: #c7cbf0;
+  line-height: 1.5;
+}
+
+.guide-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.guide-list strong,
+.guide-skill-text strong {
+  color: #fff;
+}
+
+.guide-list em {
+  color: #ffd93b;
+  font-style: normal;
+}
+
+.guide-skills,
+.guide-rarities,
+.guide-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.guide-sublabel {
+  margin: 18px 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #9aa0d0;
+}
+
+.guide-body {
+  margin: 0;
+  color: #c7cbf0;
+  line-height: 1.5;
+}
+
+.guide-skill,
+.guide-rarity,
+.guide-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.guide-badge-icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guide-badge-icon img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.guide-skill-icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+}
+
+.guide-skill-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.guide-rarity-dot {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+.guide-skill-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.45;
+}
+
+.guide-skill-text span {
+  color: #c7cbf0;
 }
 
 /* --- Profile placeholder --- */
@@ -880,7 +1022,7 @@ button:disabled {
   text-align: center;
   padding: 32px 48px;
   background: #16213e;
-  border: 2px solid #ffd700;
+  border: 2px solid #4a4e8f;
   border-radius: 12px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
 }
@@ -1351,22 +1493,35 @@ a {
   text-align: center;
   padding: 24px 32px;
   background: #16213e;
-  border: 2px solid #ffd700;
+  border: 2px solid #4a4e8f;
   border-radius: 12px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-  /* Wide enough for all 5 deck slots (104px each + 16px gaps) on one row */
-  max-width: min(700px, calc(100vw - 24px));
+  /* Wide enough for 7 deck slots (104px each + 16px gaps) on one row */
+  max-width: min(896px, calc(100vw - 24px));
+  /* Rows wrap freely (challenge decks can grow to a 3rd line and beyond);
+     cap the height so the modal scrolls instead of overflowing the screen. */
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+}
+
+.deck-choose-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.deck-choose-header .deck-choose-cancel {
+  justify-self: start;
+}
+
+.deck-choose-header .deck-choose-random {
+  justify-self: end;
 }
 
 .deck-choose h2 {
-  margin: 0 0 8px;
-}
-
-.deck-choose-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 20px;
+  margin: 0;
 }
 
 .deck-choose-random,

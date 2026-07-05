@@ -1,6 +1,6 @@
 "use client";
 
-import { CARD_CATALOG } from "@mario-cards/shared";
+import { CARD_CATALOG, isSpecialRarity } from "@mario-cards/shared";
 import { cardStyle } from "../board/CardFace";
 import type { SavedDeck } from "../../lib/deckStore";
 
@@ -15,16 +15,18 @@ interface DeckSlotCardProps {
   onClick?: () => void;
 }
 
-/** Deck status badge: star for decks holding a legend, mushroom for a
- * complete deck without one, nothing for an empty slot. */
+/** Deck status badge by Special count: mushroom for a standard deck (no
+ * specials), star for a normal 1-2 special deck, colored star for a deck that
+ * exceeds the usual 2-special limit, nothing for an empty slot. */
 function deckBadge(deck: SavedDeck | null): { src: string; alt: string } | null {
   if (!deck) return null;
-  const hasLegend = deck.cards.some(
-    (id) => CARD_CATALOG[id].rarity === "legend"
-  );
-  return hasLegend
-    ? { src: "/icons/star.png", alt: "Legend deck" }
-    : { src: "/icons/mushroom.png", alt: "Standard deck" };
+  const specials = deck.cards.filter((id) =>
+    isSpecialRarity(CARD_CATALOG[id].rarity)
+  ).length;
+  if (specials > 2)
+    return { src: "/icons/RainbowStar.png", alt: "Unlimited-special deck" };
+  if (specials >= 1) return { src: "/icons/star.png", alt: "Special deck" };
+  return { src: "/icons/mushroom.png", alt: "Standard deck" };
 }
 
 /** One of the 5 deck slots: the cover creature and deck name, or an

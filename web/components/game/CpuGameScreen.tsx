@@ -15,7 +15,7 @@ import { useRecordMatchResult } from "../../lib/statsStore";
 interface CpuGameScreenProps {
   /** Boss challenge: opens the deck chooser and pits the player against the
    * boss's themed deck. Omitted for Quick Match, which jumps straight into
-   * random legend-free decks. */
+   * random special-free decks. */
   challenge?: Challenge;
 }
 
@@ -26,7 +26,7 @@ export function CpuGameScreen({ challenge }: CpuGameScreenProps) {
   const [deck, setDeck] = useState<CardId[] | null | undefined>(
     chooseDeck ? undefined : null
   );
-  // Quick Match (no deck chooser) keeps legend cards out of the random decks.
+  // Quick Match (no deck chooser) keeps special cards out of the random decks.
   const { ui, handleAction, resetGame } = useCpuGame(
     deck,
     !chooseDeck,

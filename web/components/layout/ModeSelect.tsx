@@ -67,6 +67,30 @@ export function ModeSelect() {
           />
           <span className="nav-pill-label">Profile</span>
         </button>
+        <button
+          className="nav-pill red"
+          onClick={() => router.push("/collections")}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="nav-pill-icon"
+            src="/cards-assets/Luma.png"
+            alt=""
+          />
+          <span className="nav-pill-label">Games</span>
+        </button>
+        <button
+          className="nav-pill yellow"
+          onClick={() => router.push("/how-to-play")}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="nav-pill-icon"
+            src="/cards-assets/Toad.png"
+            alt=""
+          />
+          <span className="nav-pill-label">How to Play</span>
+        </button>
       </nav>
     </div>
   );

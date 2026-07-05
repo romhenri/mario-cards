@@ -6,6 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Mario Cards",
   description: "A tiny Hearthstone-style card game, Mario themed",
+  icons: { icon: "/icons/mushroom.png" },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

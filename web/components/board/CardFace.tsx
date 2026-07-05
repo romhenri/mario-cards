@@ -24,7 +24,7 @@ export function cardStyle(def: CardDefinition): CSSProperties {
 /* Monochrome keyword icons drawn in currentColor (white on the dark badge):
    quick = lightning bolt, bomb = lit bomb, fly = wings, reach = bow,
    stealth = crossed-out eye, taunt = target, shield = shield. */
-const ICONS: Record<string, ReactElement> = {
+export const KEYWORD_ICONS: Record<string, ReactElement> = {
   quick: (
     <path d="M13 2 L4 14 h7 l-2 8 L20 9 h-8 Z" fill="currentColor" />
   ),
@@ -95,7 +95,7 @@ const ICONS: Record<string, ReactElement> = {
   ),
 };
 
-const KEYWORDS = [
+export const KEYWORDS = [
   ["quick", "Quick"],
   ["bomb", "Bomb"],
   ["fly", "Fly"],
@@ -147,7 +147,7 @@ export function CardFace({
         {active.map(([key, label]) => (
           <span key={key} className={`keyword ${key}`} title={label}>
             <svg viewBox="0 0 24 24" aria-label={label} role="img">
-              {ICONS[key]}
+              {KEYWORD_ICONS[key]}
             </svg>
           </span>
         ))}

@@ -1,7 +1,12 @@
 "use client";
 
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { CARD_CATALOG, DECK_SIZE, type CardId } from "@mario-cards/shared";
+import {
+  CARD_CATALOG,
+  DECK_SIZE,
+  isSpecialRarity,
+  type CardId,
+} from "@mario-cards/shared";
 import { CardFace, cardStyle } from "../../components/board/CardFace";
 import { DeckSlotCard } from "../../components/deck/DeckSlotCard";
 import { Header } from "../../components/layout/Header";
@@ -35,9 +40,9 @@ function toDeck(counts: Counts): CardId[] {
   return deck;
 }
 
-const MAX_LEGEND_CARDS = 2;
+const MAX_SPECIAL_CARDS = 2;
 
-const isLegend = (id: CardId) => CARD_CATALOG[id].rarity === "legend";
+const isSpecial = (id: CardId) => isSpecialRarity(CARD_CATALOG[id].rarity);
 
 /** The card with the most copies in the deck (first added wins ties). */
 function mostPopular(counts: Counts): CardId | null {
@@ -98,28 +103,30 @@ export default function DeckPage() {
   );
   const total = Object.values(counts).reduce((sum, n) => sum + (n ?? 0), 0);
   const complete = total === DECK_SIZE;
-  const legendTotal = Object.entries(counts).reduce(
-    (sum, [id, n]) => sum + (isLegend(id as CardId) ? n ?? 0 : 0),
+  const specialTotal = Object.entries(counts).reduce(
+    (sum, [id, n]) => sum + (isSpecial(id as CardId) ? n ?? 0 : 0),
     0
   );
-  const legendIds = Object.keys(counts).filter(
-    (id) => (counts[id as CardId] ?? 0) > 0 && isLegend(id as CardId)
+  const specialIds = Object.keys(counts).filter(
+    (id) => (counts[id as CardId] ?? 0) > 0 && isSpecial(id as CardId)
   ) as CardId[];
 
-  // The cover follows the deck contents: a deck with legends is fronted by
-  // its starred legend (first legend if none starred); otherwise the most
+  // The cover follows the deck contents: a deck with specials is fronted by
+  // its starred special (first special if none starred); otherwise the most
   // popular creature.
   const effectiveCover: CardId | null =
-    legendIds.length > 0
-      ? cover && legendIds.includes(cover)
+    specialIds.length > 0
+      ? cover && specialIds.includes(cover)
         ? cover
-        : legendIds[0]
+        : specialIds[0]
       : mostPopular(counts);
 
   const add = (id: CardId) => {
     if (total >= DECK_SIZE) return;
-    if (isLegend(id) && legendTotal >= MAX_LEGEND_CARDS) {
-      setSavedMessage(`A deck can hold at most ${MAX_LEGEND_CARDS} legend cards.`);
+    if (isSpecial(id) && specialTotal >= MAX_SPECIAL_CARDS) {
+      setSavedMessage(
+        `A deck can hold at most ${MAX_SPECIAL_CARDS} special cards.`
+      );
       return;
     }
     setSavedMessage(null);
@@ -265,7 +272,8 @@ export default function DeckPage() {
                 onClick={() => add(def.id)}
                 disabled={
                   total >= DECK_SIZE ||
-                  (def.rarity === "legend" && legendTotal >= MAX_LEGEND_CARDS)
+                  (isSpecialRarity(def.rarity) &&
+                    specialTotal >= MAX_SPECIAL_CARDS)
                 }
                 title={`Add ${def.name}`}
               >
@@ -291,20 +299,21 @@ export default function DeckPage() {
                   onClick={() => add(def.id)}
                   disabled={
                     total >= DECK_SIZE ||
-                    (def.rarity === "legend" && legendTotal >= MAX_LEGEND_CARDS)
+                    (isSpecialRarity(def.rarity) &&
+                      specialTotal >= MAX_SPECIAL_CARDS)
                   }
                   title={`Add one ${def.name}`}
                 >
                   +
                 </button>
-                {def.rarity === "legend" && (
+                {isSpecialRarity(def.rarity) && (
                   <button
                     className={`deck-cover ${
                       effectiveCover === def.id ? "active" : ""
                     }`}
                     onClick={() => pickCover(def.id)}
                     disabled={count === 0}
-                    title={`Make ${def.name} the favorite legend`}
+                    title={`Make ${def.name} the favorite special`}
                   >
                     ★
                   </button>

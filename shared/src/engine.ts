@@ -1,4 +1,5 @@
 import { CARD_CATALOG } from "./cardCatalog.js";
+import { isSpecialRarity } from "./types.js";
 import type {
   AttackTarget,
   BoardCreature,
@@ -41,17 +42,17 @@ function newInstanceId(): string {
 }
 
 const ALL_CARD_IDS = Object.keys(CARD_CATALOG) as CardId[];
-const NON_LEGEND_CARD_IDS = ALL_CARD_IDS.filter(
-  (id) => CARD_CATALOG[id].rarity !== "legend"
+const NORMAL_CARD_IDS = ALL_CARD_IDS.filter(
+  (id) => !isSpecialRarity(CARD_CATALOG[id].rarity)
 );
 
 // Fallback deck for players without a custom one: DECK_SIZE random picks
 // from the catalog (duplicates possible).
 export function buildRandomDeck(
   rng: () => number = Math.random,
-  options?: { excludeLegends?: boolean }
+  options?: { excludeSpecials?: boolean }
 ): CardId[] {
-  const pool = options?.excludeLegends ? NON_LEGEND_CARD_IDS : ALL_CARD_IDS;
+  const pool = options?.excludeSpecials ? NORMAL_CARD_IDS : ALL_CARD_IDS;
   const deck: CardId[] = [];
   for (let i = 0; i < DECK_SIZE; i++) {
     deck.push(pool[Math.floor(rng() * pool.length)]);

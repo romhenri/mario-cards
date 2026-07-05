@@ -19,8 +19,9 @@ export function typeLabel(type: string): string {
 
 export type CardSortMode = "type" | "cost" | "rarity";
 
-// Best first: rarity sorts top-down from legend to common.
-const RARITY_ORDER: CardRarity[] = ["legend", "rare", "common"];
+// Best first: rarity sorts top-down through the Special tier (boss, legend)
+// then the Normal tier (rare, common).
+const RARITY_ORDER: CardRarity[] = ["boss", "legend", "rare", "common"];
 
 /** Sorted copy of `cards`; ties always break by cost then name so the
  * grid order is stable across modes. */

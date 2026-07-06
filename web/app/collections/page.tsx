@@ -9,11 +9,13 @@ import { sortCards } from "../../lib/cardTypes";
 /** All Cards, but grouped by source game. Generic "3D" cards stay out —
  * only cards tied to a specific game show up in a collection. */
 const GAMES: { game: CardGame; label: string }[] = [
+  { game: "LuigisMassion", label: "Luigi's Mansion" },
+  { game: "Sunshine", label: "Sunshine" },
   { game: "Galaxy", label: "Galaxy" },
   { game: "NewBrosU", label: "SM Bros U" },
+  { game: "3DLand", label: "3D Land" },
   { game: "3DWorld", label: "3D World" },
   { game: "BowersFury", label: "Bowser's Fury" },
-  { game: "Sunshine", label: "Sunshine" },
 ];
 
 const COLLECTIONS = GAMES.map(({ game, label }) => ({

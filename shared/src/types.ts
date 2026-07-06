@@ -178,7 +178,31 @@ export type CardId =
   | "ghost-guy"
   | "cranky-kong"
   | "e-gadd"
-  | "king-boo-lm";
+  | "king-boo-lm"
+  | "bulrush"
+  | "fire-spike"
+  | "hoppo"
+  | "melon-piranha-plant"
+  | "poplin"
+  | "prince-florian"
+  | "roller-koopa"
+  | "shova"
+  | "skedaddler"
+  | "swirlypod"
+  | "talking-flower"
+  | "wonder-bowser-jr"
+  | "bombomb-buddy"
+  | "the-chimp"
+  | "digga"
+  | "flipbug"
+  | "fluzzard"
+  | "jack-goomba"
+  | "mandibug"
+  | "octoboo"
+  | "penguru"
+  | "prickly-piranha-plant"
+  | "whimp"
+  | "lubba";
 
 export type CardRarity = "common" | "rare" | "legend" | "boss";
 
@@ -206,12 +230,14 @@ export type CardGame =
   | "3DLand"
   | "3DWorld"
   | "BowersFury"
-  | "Sunshine";
+  | "Sunshine"
+  | "Wonder";
 
 // Creature families, used to group cards in the catalog and deck builder
 export type CreatureType =
   | "goomba"
   | "koopa"
+  | "spike"
   | "shy-guy"
   | "plant"
   | "bro"

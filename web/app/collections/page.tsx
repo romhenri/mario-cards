@@ -16,6 +16,7 @@ const GAMES: { game: CardGame; label: string }[] = [
   { game: "3DLand", label: "3D Land" },
   { game: "3DWorld", label: "3D World" },
   { game: "BowersFury", label: "Bowser's Fury" },
+  { game: "Wonder", label: "Wonder" },
 ];
 
 const COLLECTIONS = GAMES.map(({ game, label }) => ({

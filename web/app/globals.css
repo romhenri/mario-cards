@@ -573,23 +573,37 @@ button:disabled {
 
 /* --- HUD --- */
 .hud {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   gap: 16px;
   align-items: center;
   padding: 8px 12px;
   background: #16213e;
   border-radius: 8px;
-  flex-wrap: wrap;
 }
 
-/* Fixed-width slot so "You"/"CPU"/longer names all take the same space
-   and the rest of the HUD never shifts */
-.hud .name {
-  font-weight: bold;
-  width: 90px;
+/* Life sits hard against the left edge */
+.hud-left {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  gap: 8px;
+  justify-self: start;
+}
+
+/* Coins/hand sit against the right edge */
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-self: end;
+}
+
+/* Name is centered in the HUD via the middle grid column */
+.hud .name {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
   overflow: hidden;
   white-space: nowrap;
@@ -1304,7 +1318,7 @@ a {
 .deck-slots-row {
   display: flex;
   gap: 16px;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
   margin: 16px 0 24px;
 }

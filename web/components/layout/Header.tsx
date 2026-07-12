@@ -10,11 +10,19 @@ interface HeaderProps {
   subtitle?: string;
   /** Where the back button leads (non-home pages only) */
   backHref?: string;
+  /** Optional control pinned to the right, mirroring the back button */
+  action?: React.ReactNode;
 }
 
 /* Three-column header: back button on the left (hidden on the home page),
-   logo centered — full size on home, reduced everywhere else. */
-export function Header({ small = false, subtitle, backHref = "/" }: HeaderProps) {
+   logo centered — full size on home, reduced everywhere else — and an
+   optional action on the right. */
+export function Header({
+  small = false,
+  subtitle,
+  backHref = "/",
+  action,
+}: HeaderProps) {
   const isHome = usePathname() === "/";
   const classes = ["site-header", isHome && "home", small && "small"]
     .filter(Boolean)
@@ -35,6 +43,7 @@ export function Header({ small = false, subtitle, backHref = "/" }: HeaderProps)
         </Link>
         {subtitle && <span className="subtitle">{subtitle}</span>}
       </h1>
+      {action && <div className="header-action">{action}</div>}
     </header>
   );
 }

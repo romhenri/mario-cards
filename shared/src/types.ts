@@ -226,14 +226,17 @@ export type CardGame =
   | "3D"
   | "LuigisMassion"
   | "Galaxy"
-  | "NewBrosU"
+  | "NewBros"
   | "3DLand"
   | "3DWorld"
   | "BowersFury"
   | "Sunshine"
   | "Wonder"
   | "Jamboree"
-  | "TenisFever";
+  | "TenisFever"
+  | "Mario64"
+  | "MarioWorld"
+  | "Bros";
 
 // Creature families, used to group cards in the catalog and deck builder
 export type CreatureType =
@@ -258,7 +261,8 @@ export type CreatureType =
   | "star"
   | "lava"
   | "wall"
-  | "dry";
+  | "dry"
+  | "cold";
 
 export interface CardDefinition {
   id: CardId;

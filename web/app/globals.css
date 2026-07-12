@@ -58,6 +58,22 @@ button:disabled {
   font-size: 13px;
 }
 
+/* Mirrors .header-back on the opposite side of the logo */
+.site-header .header-action {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.site-header .header-action a {
+  text-decoration: none;
+  --pill-border: #4a4e8f;
+}
+
+.site-header.small .header-action a {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
 .title {
   grid-column: 2;
   display: flex;

@@ -231,7 +231,9 @@ export type CardGame =
   | "3DWorld"
   | "BowersFury"
   | "Sunshine"
-  | "Wonder";
+  | "Wonder"
+  | "Jamboree"
+  | "TenisFever";
 
 // Creature families, used to group cards in the catalog and deck builder
 export type CreatureType =
@@ -253,7 +255,10 @@ export type CreatureType =
   | "dino"
   | "kong"
   | "fish"
-  | "star";
+  | "star"
+  | "lava"
+  | "wall"
+  | "dry";
 
 export interface CardDefinition {
   id: CardId;

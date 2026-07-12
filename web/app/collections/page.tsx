@@ -17,6 +17,8 @@ const GAMES: { game: CardGame; label: string }[] = [
   { game: "3DWorld", label: "3D World" },
   { game: "BowersFury", label: "Bowser's Fury" },
   { game: "Wonder", label: "Wonder" },
+  { game: "Jamboree", label: "Jamboree" },
+  { game: "TenisFever", label: "Tennis Fever" },
 ];
 
 const COLLECTIONS = GAMES.map(({ game, label }) => ({
@@ -29,15 +31,9 @@ const COLLECTIONS = GAMES.map(({ game, label }) => ({
 })).filter(({ cards }) => cards.length > 0);
 
 export default function GameCollectionsPage() {
-  const total = COLLECTIONS.reduce((sum, c) => sum + c.cards.length, 0);
-
   return (
     <main className="page">
       <Header subtitle="Games" />
-
-      <div className="deck-toolbar">
-        <span className="deck-count complete">{total} cards</span>
-      </div>
 
       <div className="deck-grid cards-grid">
         {COLLECTIONS.map(({ game, label, cards }) => (

@@ -10,18 +10,29 @@ import { sortCards } from "../../lib/cardTypes";
 /** All Cards, but grouped by source game. Generic "3D" cards stay out —
  * only cards tied to a specific game show up in a collection. */
 const GAMES: { game: CardGame; label: string }[] = [
+  { game: "Kong", label: "Donkey Kong" },
+  { game: "KongCountry", label: "Kong Country" },
   { game: "Bros", label: "Super Mario Bros" },
   { game: "MarioWorld", label: "Mario World" },
+  { game: "Land", label: "Mario Land" },
+  { game: "Kart", label: "Kart" },
   { game: "Mario64", label: "Mario 64" },
+  { game: "YoshisIsland", label: "Yoshi's Island" },
+  { game: "YoshisIslandDS", label: "Yoshi's Island DS" },
+  { game: "PaperMario", label: "Paper Mario" },
   { game: "LuigisMassion", label: "Luigi's Mansion" },
   { game: "Sunshine", label: "Sunshine" },
+  { game: "64DS", label: "64 DS" },
   { game: "Galaxy", label: "Galaxy" },
   { game: "NewBros", label: "SM Bros U" },
   { game: "3DLand", label: "3D Land" },
   { game: "3DWorld", label: "3D World" },
+  { game: "MarioMaker", label: "Mario Maker" },
+  { game: "Odyssey", label: "Odyssey" },
   { game: "BowersFury", label: "Bowser's Fury" },
   { game: "Wonder", label: "Wonder" },
   { game: "Jamboree", label: "Jamboree" },
+  { game: "Tennis", label: "Tennis" },
   { game: "TenisFever", label: "Tennis Fever" },
 ];
 

@@ -236,7 +236,18 @@ export type CardGame =
   | "TenisFever"
   | "Mario64"
   | "MarioWorld"
-  | "Bros";
+  | "Bros"
+  | "Kart"
+  | "PaperMario"
+  | "64DS"
+  | "MarioMaker"
+  | "Odyssey"
+  | "Kong"
+  | "KongCountry"
+  | "YoshisIsland"
+  | "YoshisIslandDS"
+  | "Tennis"
+  | "Land";
 
 // Creature families, used to group cards in the catalog and deck builder
 export type CreatureType =

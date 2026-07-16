@@ -14,6 +14,7 @@ import {
   type PlayerAction,
 } from "@mario-cards/shared";
 import { decideCpuTurn } from "./cpuAI";
+import { getDifficulty } from "./difficulty";
 import { playTransitionSounds } from "./sounds";
 import {
   gameUiReducer,
@@ -88,7 +89,8 @@ export function useCpuGame(
       ) {
         return;
       }
-      const actions = decideCpuTurn(turnStart, CPU_PLAYER_ID);
+      // Read the setting per turn, so changing it mid-match takes effect at once.
+      const actions = decideCpuTurn(turnStart, CPU_PLAYER_ID, getDifficulty());
       for (const action of actions) {
         await sleep(CPU_ACTION_DELAY_MS);
         const current = stateRef.current;

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { DifficultyButton } from "@/components/layout/DifficultyButton";
 import { MuteButton } from "@/components/layout/MuteButton";
 import "./globals.css";
 
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <MuteButton />
+        <DifficultyButton />
         {children}
       </body>
     </html>

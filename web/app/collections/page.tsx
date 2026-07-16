@@ -33,7 +33,7 @@ const GAMES: { game: CardGame; label: string }[] = [
   { game: "Wonder", label: "Wonder" },
   { game: "Jamboree", label: "Jamboree" },
   { game: "Tennis", label: "Tennis" },
-  { game: "TenisFever", label: "Tennis Fever" },
+  { game: "TennisFever", label: "Tennis Fever" },
 ];
 
 const COLLECTIONS = GAMES.map(({ game, label }) => ({
@@ -45,16 +45,22 @@ const COLLECTIONS = GAMES.map(({ game, label }) => ({
   ),
 })).filter(({ cards }) => cards.length > 0);
 
+const OTHERS_COUNT = Object.values(CARD_CATALOG).filter(
+  (def) => def.game === "3D"
+).length;
+
 export default function GameCollectionsPage() {
   return (
     <main className="page">
       <Header
         subtitle="Games"
         action={
-          <Link className="nav-pill" href="/collections/others">
-            <span className="header-back-label">Others</span>
-            <span aria-hidden="true">⋯</span>
-          </Link>
+          OTHERS_COUNT > 0 ? (
+            <Link className="nav-pill" href="/collections/others">
+              <span className="header-back-label">Others</span>
+              <span aria-hidden="true">⋯</span>
+            </Link>
+          ) : undefined
         }
       />
 

@@ -233,7 +233,7 @@ export type CardGame =
   | "Sunshine"
   | "Wonder"
   | "Jamboree"
-  | "TenisFever"
+  | "TennisFever"
   | "Mario64"
   | "MarioWorld"
   | "Bros"

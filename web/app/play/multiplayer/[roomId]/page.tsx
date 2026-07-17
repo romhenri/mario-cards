@@ -10,6 +10,7 @@ import {
   gameUiReducer,
   initialGameUiState,
 } from "../../../../lib/gameStateStore";
+import { useRecordMatchHistory } from "../../../../lib/matchHistoryStore";
 import { playTransitionSounds } from "../../../../lib/sounds";
 import { useRecordMatchResult } from "../../../../lib/statsStore";
 import { getWsClient, type ServerMessage } from "../../../../lib/wsClient";
@@ -20,6 +21,10 @@ export default function MultiplayerRoomPage() {
   const router = useRouter();
   const [ui, dispatch] = useReducer(gameUiReducer, initialGameUiState);
   useRecordMatchResult(ui.view);
+  useRecordMatchHistory(ui.view, {
+    mode: "multiplayer",
+    opponentName: "Opponent",
+  });
   const joinAttemptedRef = useRef(false);
   const lastViewRef = useRef<ClientGameState | null>(null);
 

@@ -606,6 +606,115 @@ button:disabled {
   color: #9aa0d0;
 }
 
+/* --- Match history (Profile) --- */
+.match-history-empty {
+  margin: 0;
+  font-size: 13px;
+  color: #9aa0d0;
+  text-align: center;
+}
+
+.match-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.match-history-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: #16213e;
+  border: 2px solid #4a4e8f;
+  border-left-width: 4px;
+  border-radius: 12px;
+  color: #eaeaea;
+}
+
+.match-history-card.won {
+  border-left-color: #7dff8a;
+}
+
+.match-history-card.lost {
+  border-left-color: #ff8a9a;
+}
+
+.match-history-card-art-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #0f3460;
+  border: 2px solid var(--card-border, #4a4e8f);
+  font-size: 16px;
+  font-weight: bold;
+  color: #9aa0d0;
+  overflow: hidden;
+}
+
+.match-history-card-art {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.match-history-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.match-history-card-name {
+  font-size: 14px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.match-history-card-sub,
+.match-history-card-date {
+  font-size: 11px;
+  color: #9aa0d0;
+}
+
+.match-history-card-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.match-history-card-result {
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.match-history-card-result.won {
+  color: #7dff8a;
+}
+
+.match-history-card-result.lost {
+  color: #ff8a9a;
+}
+
+.match-history-card-turns {
+  font-size: 11px;
+  color: #9aa0d0;
+}
+
 /* --- Game board layout --- */
 .game-board {
   display: flex;

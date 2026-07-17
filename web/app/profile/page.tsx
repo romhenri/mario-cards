@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DeckSlotCard } from "../../components/deck/DeckSlotCard";
 import { Header } from "../../components/layout/Header";
+import { MatchHistoryCard } from "../../components/profile/MatchHistoryCard";
 import {
   CHALLENGES,
   isChallengeDeckUnlocked,
@@ -16,6 +17,10 @@ import {
   loadDeckSlots,
   type SavedDeck,
 } from "../../lib/deckStore";
+import {
+  loadMatchHistory,
+  type MatchHistoryEntry,
+} from "../../lib/matchHistoryStore";
 import { loadMatchStats, type MatchStats } from "../../lib/statsStore";
 
 function challengeProgress(
@@ -43,10 +48,12 @@ export default function ProfilePage() {
   const [slots, setSlots] = useState<(SavedDeck | null)[]>(() =>
     Array(DECK_SLOT_COUNT).fill(null)
   );
+  const [history, setHistory] = useState<MatchHistoryEntry[]>([]);
   useEffect(() => {
     setStats(loadMatchStats());
     setDone(loadCompletedChallenges());
     setSlots(loadDeckSlots());
+    setHistory(loadMatchHistory());
   }, []);
 
   const villain = challengeProgress("villains", done);
@@ -129,6 +136,19 @@ export default function ProfilePage() {
               />
             ))}
           </div>
+        </section>
+
+        <section className="profile-section" aria-label="Match history">
+          <h3>Match History</h3>
+          {history.length === 0 ? (
+            <p className="match-history-empty">No matches played yet.</p>
+          ) : (
+            <div className="match-history-list">
+              {history.map((entry) => (
+                <MatchHistoryCard key={entry.gameId} entry={entry} />
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </main>

@@ -10,6 +10,8 @@ import { Header } from "../layout/Header";
 import { useCpuGame } from "../../lib/cpuGameClient";
 import type { Challenge } from "../../lib/challenges";
 import { markChallengeCompleted } from "../../lib/challengeStore";
+import { getDifficulty } from "../../lib/difficulty";
+import { useRecordMatchHistory } from "../../lib/matchHistoryStore";
 import { useRecordMatchResult } from "../../lib/statsStore";
 
 interface CpuGameScreenProps {
@@ -36,6 +38,12 @@ export function CpuGameScreen({ challenge }: CpuGameScreenProps) {
   // Beating a boss marks its challenge as cleared.
   const view = ui.view;
   useRecordMatchResult(view);
+  useRecordMatchHistory(view, {
+    mode: challenge ? "challenge" : "cpu",
+    opponentName: challenge ? challenge.name : "CPU",
+    coverCardId: challenge?.boss ?? null,
+    difficulty: getDifficulty(),
+  });
   useEffect(() => {
     if (
       challenge &&

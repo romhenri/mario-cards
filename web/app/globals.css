@@ -2050,3 +2050,69 @@ a {
   border-radius: 999px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
+
+/* --- Mobile card sizing: fit 3 cards per row in battle and in the card
+   exhibition pages (All Cards / Collections / Deck Builder / Deck view).
+   `zoom` shrinks each card's whole visual (art, text, badges) as one
+   proportional replica instead of resizing every inner rule by hand.
+   Kept last in the file so it wins the cascade over the unconditional
+   .card/.deck-grid/.deck-slot rules above (same specificity). */
+@media (max-width: 480px) {
+  .hand-row .card,
+  .board-row .creature {
+    zoom: 0.85;
+  }
+
+  .hand-row {
+    min-height: 143px;
+  }
+
+  .board-row {
+    min-height: 154px;
+  }
+
+  .cards-grid .card,
+  .deckview-item .card {
+    zoom: 0.84;
+  }
+
+  .cards-grid {
+    --grid-track: 101px;
+  }
+
+  .deckview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(101px, 1fr));
+    gap: 10px;
+  }
+
+  .deckview-count {
+    min-width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+
+  .deck-grid:not(.cards-grid) {
+    --grid-track: 101px;
+  }
+
+  .deck-slot .card {
+    zoom: 0.73;
+  }
+
+  .deck-slot-controls {
+    gap: 3px;
+  }
+
+  .deck-minus,
+  .deck-plus,
+  .deck-cover {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+
+  .deck-copies {
+    min-width: 16px;
+    font-size: 10px;
+  }
+}

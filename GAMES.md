@@ -21,6 +21,7 @@
 | `3DWorld`       | 3D World          | Super Mario 3D World                                                |
 | `MarioMaker`    | Mario Maker       | Super Mario Maker **and** Super Mario Maker 2                       |
 | `Odyssey`       | Odyssey           | Super Mario Odyssey                                                 |
+| `MarioRPG`      | Mario RPG         | Super Mario RPG                                                     |
 | `BowsersFury`    | Bowser's Fury     | Bowser's Fury                                                       |
 | `Wonder`        | Wonder            | Super Mario Bros. Wonder                                            |
 | `Jamboree`      | Jamboree          | Super Mario Party Jamboree                                          |

@@ -1,0 +1,300 @@
+Goomba, Bros
+Paragoomba, Bros
+Gloomba, 3DLand
+Galoomba, MarioWorld
+Winged Galoomba, MarioWorld
+Cat Goomba, 3DWorld
+Grand Goomba, Bros
+Grand Galoomba, 3DWorld
+Koopa Troopa, Bros
+Koopa Paratroopa, Bros
+Magikoopa, MarioWorld
+Lakitu, Bros
+Dry Bones, MarioWorld
+Para Dry Bones, MarioWorld
+Spike, Bros
+Spike, 3DWorld
+Bowser Jr., Sunshine
+Chargin' Chuck, MarioWorld
+Bowser, Bros
+Shy Guy, Bros
+Fly Guy, MarioWorld
+Piranha Plant, Bros
+Venus Fire Trap, Bros
+Piranha Creeper, 3DWorld
+Pokey, Bros
+Snow Pokey, Mario64
+Stingby, 3DLand
+Ant Trooper, 3DWorld
+Biddybud, 3DLand
+Para-Biddybud, 3DLand
+Flutter, MarioWorld
+Wiggler, MarioWorld
+Fuzzler, 3DWorld
+Conkdor, 3DWorld
+Fizzlit, Galaxy
+Blooper, Bros
+Cheep Cheep, Bros
+Splounder, 3DWorld
+Boomerang Bro, Bros
+Fire Bro, Bros
+Hammer Bro, Bros
+Ice Bro, NewBros
+Sledge Bro, Bros
+Bob-Omb, Bros
+Para-Bomb, MarioWorld
+Bullet Bill, Bros
+Cat Bullet Bill, 3DWorld
+Banzai Bill, MarioWorld
+King Bob-omb, Mario64
+Boo, Bros
+Big Boo, MarioWorld
+Peepa, 3DLand
+King Boo, Kart
+Monty Mole, NewBros
+Rocky Wrench, NewBros
+Morty Mole, 3DLand
+Chomp, Bros
+Bully, Mario64
+Thwomp, Bros
+Blockstepper, 3DWorld
+Spiny Skipsqueak, 3DWorld
+Daisy, Land
+Peach, Bros
+Rosaline, Galaxy
+Pauline, Kong
+Toad, Bros
+Toadette, Kart
+Blue Toad, NewBros
+Purple Toad, Sunshine
+Red Toad, Bros
+Yellow Toad, NewBros
+Captain Toad, Galaxy
+Mario, Bros
+Luigi, Bros
+Donkey Kong, Kong
+Wario, Land
+Waluigi, Tennis
+Diddy Kong, KongCountry
+Yoshi, MarioWorld
+Plessiee, 3DWorld
+Blue Yoshi, MarioWorld
+Red Yoshi, MarioWorld
+Yellow Yoshi, MarioWorld
+Birdo, Bros
+Luma, Galaxy
+Blue Luma, Galaxy
+Bomb Boo, Galaxy
+Bee, Galaxy
+Electrogoomba, Galaxy
+Octoguy, Galaxy
+Pokeyplant, Galaxy
+Spiny Piranha Plant, Galaxy
+Star Bunny, Galaxy
+Dixie Kong, KongCountry
+Queen Bee, Galaxy
+Dino Piranha, Galaxy
+Blurker, 3DWorld
+Cat Banzai Bill, 3DWorld
+Flopter, 3DWorld
+Fuzzy, MarioWorld
+Goomba Stack, 3DLand
+Madpole, 3DWorld
+Rabbit, Mario64
+Skipsqueak, 3DWorld
+Spiny, Bros
+Ty-foo, 3DWorld
+Walleye, 3DLand
+Boom Boom, Bros
+Calico Cat, BowersFury
+Cat Bully, BowersFury
+Cat Goomba, BowersFury
+Cat, BowersFury
+Cat Cheep Cheep, BowersFury
+Cat Coin Coffer, BowersFury
+Cat Koopa Troopa, BowersFury
+Cat Seagull, BowersFury
+Cat Stingby, BowersFury
+Piranha Plant Cat, BowersFury
+Bowser Jr., BowersFury
+Fury Bowser, BowersFury
+Brolder, 3DWorld
+Coin Coffer, 3DLand
+Rammerhead, 3DWorld
+Pom Pom, 3DLand
+Prince Bully, 3DWorld
+Hisstocrat, 3DWorld
+Dorrie, Mario64
+Kamek, MarioWorld
+Balloon Baby Yoshi, NewBros
+Nabbit, NewBros
+Sumo Bro, NewBros
+Larry, NewBros
+Iggy, NewBros
+Lemmy, NewBros
+Wendy, NewBros
+Morton, NewBros
+Roy, NewBros
+Ludwig, NewBros
+Pianta, Sunshine
+Petey Piranha, Sunshine
+Skating Shy Guy, Kart
+Orange Yoshi, Sunshine
+Pink Yoshi, Sunshine
+Purple Yoshi, Sunshine
+Baby Mario, YoshisIsland
+Baby Luigi, YoshisIsland
+Baby Peach, YoshisIslandDS
+Baby Daisy, Kart
+Toadsworth, Sunshine
+Noshi, Kart
+Cataquack, Sunshine
+Red Cataquack, Sunshine
+Penguin Coach, Galaxy
+Penguin, Mario64
+Cow, 3DWorld
+Dry Goomba, 3DLand
+Goombeetle, Galaxy
+Goombrat, NewBros
+Plurp, Sunshine
+Rocto, Galaxy
+Sidestepper, Bros
+Snowman, Mario64
+Stone Spike, NewBros
+Tail Goomba, 3DLand
+Tracks, Galaxy
+Baby Rosalina, Kart
+Baby Waluigi, TennisFever
+Baby Wario, YoshisIslandDS
+Funky Kong, KongCountry
+Kamella, Galaxy
+Ink Piranha, 3DLand
+Tail Boo, 3DLand
+Tail Bullet Bill, 3DLand
+Wallop, 3DLand
+Dry Bowser, NewBros
+Bony Beetle, MarioWorld
+Chomplet, Sunshine
+Kritter, Kong
+Mayor Pianta, Sunshine
+Gooper Blooper, Sunshine
+Blue Twirler, LuigisMansion
+Flying Fish, LuigisMansion
+Ghost Guy, LuigisMansion
+Cranky Kong, Kong
+E. Gadd, LuigisMansion
+King Boo LM, LuigisMansion
+Bulrush, Wonder
+Fire Spike, Wonder
+Hoppo, Wonder
+Melon Piranha Plant, Wonder
+Poplin, Wonder
+Prince Florian, Wonder
+Roller Koopa, Wonder
+Shova, Wonder
+Skedaddler, Wonder
+Swirlypod, Wonder
+Talking Flower, Wonder
+Wonder Bowser Jr., Wonder
+Bombomb Buddy, 3DWorld
+The Chimp, Galaxy
+Digga, Galaxy
+Flipbug, Galaxy
+Fluzzard, Galaxy
+Jack Goomba, Galaxy
+Mandibug, Galaxy
+Octoboo, Galaxy
+Penguru, Galaxy
+Prickly Piranha Plant, Galaxy
+Whimp, Galaxy
+Lubba, Galaxy
+Blue Lava Bubble, Galaxy
+Buzzy Beetle, Bros
+Charvaargh, 3DWorld
+Hop-Chop, 3DWorld
+Lava Bubble, Bros
+Ninji, Jamboree
+Porcupuffer, MarioWorld
+Spike Top, MarioWorld
+Bowser TV, Jamboree
+Sprixie, 3DWorld
+TV Host Toad, Jamboree
+Bossblob, 3DWorld
+Freezie, Bros
+Nokis, Sunshine
+Pteranodon, Galaxy
+Seagull, Sunshine
+Swoop, MarioWorld
+Talking Flower Announcer, TennisFever
+Bone Piranha Plant, NewBros
+Chill Bully, Mario64
+Dolphin, MarioWorld
+Fishbone, MarioWorld
+Huckit Crab, NewBros
+Mr. I, Mario64
+Rex, MarioWorld
+Snifit, Bros
+Ukiki, Mario64
+Urchin, MarioWorld
+Blargg, MarioWorld
+Reznor, MarioWorld
+Bramball, NewBros
+Bulber, NewBros
+Para-Beetle, MarioWorld
+Heavy Para-Beetle, NewBros
+Mechakoopa, MarioWorld
+Muncher, MarioWorld
+Scaredy Rat, 3DLand
+Amp, Mario64
+Broozer, NewBros
+Gold Goomba, NewBros
+Goomboss, PaperMario
+Impostor Bowser, Jamboree
+King Bill, NewBros
+Zappa Mechakoopa, MarioMaker
+Chief Chilly, 64DS
+Eyerok, Mario64
+Bouldergeist, Galaxy
+Whomp King, Mario64
+Baby Donkey Kong, YoshisIslandDS
+Baby Bowser, YoshisIsland
+Baby Fat, MarioRPG
+Big Bully, Mario64
+Bonneter, Odyssey
+Female Bonneter, Odyssey
+Frog, Odyssey
+Glydon, Odyssey
+Goombette, Odyssey
+Jaxi, Odyssey
+Moe-Eye, Odyssey
+Rabbit, Odyssey
+Sheep, Odyssey
+Talkatoo, Odyssey
+Tiara, Odyssey
+Tostarenan, Odyssey
+Archivist Toadette, Odyssey
+Brigade Blue Toad, Odyssey
+Cappy, Odyssey
+Coach, Odyssey
+Lochlady, Odyssey
+Shiverian, Odyssey
+Shiverian Elder, Odyssey
+Shiverian Racer, Odyssey
+Volbonan, Odyssey
+Poochy, YoshisIsland
+Klepto, Mario64
+Mini Goomba, Bros
+Tropical Wiggler, Odyssey
+Uproot, Odyssey
+Chincho, 3DWorld
+Purple Cheep Cheep, 3DLand
+Small Bird, Odyssey
+Urban Stingby, Odyssey
+Meowser, 3DWorld
+Motley Bossblob, 3DWorld
+Gooigi, LuigisMansion
+Hariet, Odyssey
+Madame Brood, Odyssey
+Rango, Odyssey
+Spewart, Odyssey
+Topper, Odyssey

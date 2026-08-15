@@ -20,7 +20,7 @@ const GAMES: { game: CardGame; label: string }[] = [
   { game: "YoshisIsland", label: "Yoshi's Island" },
   { game: "YoshisIslandDS", label: "Yoshi's Island DS" },
   { game: "PaperMario", label: "Paper Mario" },
-  { game: "LuigisMassion", label: "Luigi's Mansion" },
+  { game: "LuigisMansion", label: "Luigi's Mansion" },
   { game: "Sunshine", label: "Sunshine" },
   { game: "64DS", label: "64 DS" },
   { game: "Galaxy", label: "Galaxy" },
@@ -34,6 +34,7 @@ const GAMES: { game: CardGame; label: string }[] = [
   { game: "Jamboree", label: "Jamboree" },
   { game: "Tennis", label: "Tennis" },
   { game: "TennisFever", label: "Tennis Fever" },
+  { game: "MarioRPG", label: "Mario RPG" },
 ];
 
 const COLLECTIONS = GAMES.map(({ game, label }) => ({

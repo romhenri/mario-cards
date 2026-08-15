@@ -224,7 +224,7 @@ export function isSpecialRarity(rarity: CardRarity): boolean {
 // to a specific game (default when unknown)
 export type CardGame =
   | "3D"
-  | "LuigisMassion"
+  | "LuigisMansion"
   | "Galaxy"
   | "NewBros"
   | "3DLand"
@@ -247,7 +247,8 @@ export type CardGame =
   | "YoshisIsland"
   | "YoshisIslandDS"
   | "Tennis"
-  | "Land";
+  | "Land"
+  | "MarioRPG";
 
 // Creature families, used to group cards in the catalog and deck builder
 export type CreatureType =
